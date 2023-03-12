@@ -6,7 +6,7 @@ using BEComicWeb.Responsitory.StoryResponsitory;
 
 namespace BEComicWeb.Controllers
 {
-    [Route("api/Story")]
+    [Route("api/story")]
     [ApiController]
     public class StoryController : ControllerBase
     {
