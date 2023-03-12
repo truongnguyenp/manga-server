@@ -13,6 +13,7 @@ ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
 
+
 // For Entity Framework
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("connMSSQL")));
 
@@ -66,5 +67,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.UseCors(builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 app.Run();
