@@ -8,7 +8,7 @@ using BEComicWeb.Responsitory;
 
 namespace BEComicWeb.Controllers
 {
-    [Route("api/author")]
+    [Route("author")]
     [ApiController]
     public class AuthorController : ControllerBase
     {
@@ -19,14 +19,14 @@ namespace BEComicWeb.Controllers
             _IAuthorResponse = IAuthorRes;
         }
 
-        // GET: api/author
-        [HttpGet]
+        // GET: author
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Authors>>> Get()
         {
             return await Task.FromResult(_IAuthorResponse.GetAuthorDetails());
         }
 
-        // GET api/author/{id}
+        // GET author/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Authors>> Get(string id)
         {
@@ -38,7 +38,7 @@ namespace BEComicWeb.Controllers
             return Authors;
         }
 
-        // POST api/author
+        // POST author
         [HttpPost]
         public async Task<ActionResult<Authors>> Post(Authors author)
         {
@@ -47,7 +47,7 @@ namespace BEComicWeb.Controllers
         }
 
         // PUT api/author/{id}
-        [HttpPut("{id}")]
+        [HttpPut("update/{id}")]
         public async Task<ActionResult<Authors>> Put(string id, Authors author)
         {
             if (id != author.Id)
@@ -73,13 +73,13 @@ namespace BEComicWeb.Controllers
         }
 
         // DELETE api/author/{id}
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult<Authors>> Delete(string id)
         {
             var author = _IAuthorResponse.DeleteAuthor(id);
             return await Task.FromResult(author);
         }
-
+        
         private bool AuthorExists(string id)
         {
             return _IAuthorResponse.CheckAuthorExists(id);

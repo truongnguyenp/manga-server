@@ -9,7 +9,7 @@ using BEComicWeb.Model.ResponseModel;
 
 namespace BEComicWeb.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AuthenticateController : ControllerBase
     {

@@ -6,7 +6,7 @@ using BEComicWeb.Responsitory.StoryResponsitory;
 
 namespace BEComicWeb.Controllers
 {
-    [Route("api/story")]
+    [Route("story")]
     [ApiController]
     public class StoryController : ControllerBase
     {
@@ -17,14 +17,14 @@ namespace BEComicWeb.Controllers
             _IStoryResponse = IStoryRes;
         }
 
-        // GET: api/Story
-        [HttpGet]
+        // GET: story/all
+        [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Stories>>> Get()
         {
             return await Task.FromResult(_IStoryResponse.GetStoryDetails());
         }
 
-        // GET api/Story/{id}
+        // GET story/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Stories>> Get(string id)
         {
@@ -36,7 +36,7 @@ namespace BEComicWeb.Controllers
             return Stories;
         }
 
-        // POST api/Story
+        // POST story
         [HttpPost]
         public async Task<ActionResult<Stories>> Post(Stories Story)
         {
@@ -44,8 +44,8 @@ namespace BEComicWeb.Controllers
             return await Task.FromResult(Story);
         }
 
-        // PUT api/Story/{id}
-        [HttpPut("{id}")]
+        // PUT story/{id}
+        [HttpPut("update/{id}")]
         public async Task<ActionResult<Stories>> Put(string id, Stories Story)
         {
             if (id != Story.Id)
@@ -70,8 +70,8 @@ namespace BEComicWeb.Controllers
             return await Task.FromResult(Story);
         }
 
-        // DELETE api/Story/{id}
-        [HttpDelete("{id}")]
+        // DELETE story/delete/{id}
+        [HttpDelete("delete/{id}")]
         public async Task<ActionResult<Stories>> Delete(string id)
         {
             var Story = _IStoryResponse.DeleteStory(id);

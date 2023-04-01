@@ -14,113 +14,72 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
 
         public bool AddAuthor(Authors? author)
         {
-            try
+
+            if (author == null)
             {
-                if (author == null)
-                {
-                    return false;
-                }
-                _dbContext.Authors.Add(author);
-                _dbContext.SaveChanges();
-                return true;
+                return false;
             }
-            catch
-            {
-                throw;
-            }
+            _dbContext.AuthorsDb.Add(author);
+            _dbContext.SaveChanges();
+            return true;
         }
 
         List<Authors> IAuthorResponse.GetAuthorDetails()
         {
-            try
-            {
-                List<Authors> result = _dbContext.Authors.ToList();
-                return result;
-            }
-            catch
-            {
-                throw;
-            }
+            List<Authors> result = _dbContext.AuthorsDb.ToList();
+            return result;
         }
 
         Authors IAuthorResponse.GetAuthorDetail(string id)
         {
-            try
+            Authors author = _dbContext.AuthorsDb.Find(id);
+            if (author != null)
             {
-                Authors author = _dbContext.Authors.Find(id);
-                if (author != null)
-                {
-                    return author;
-                }
-                return new();
+                return author;
             }
-            catch
-            {
-                throw;
-            }
+            return new();
         }
 
         bool IAuthorResponse.AddAuthor(Authors author)
         {
-            try
+            if (author != null)
             {
-                if (author != null)
-                {
-                    _dbContext.Authors.Add(author);
-                    _dbContext.SaveChanges();
-                    return true;
-                }
+                _dbContext.AuthorsDb.Add(author);
+                _dbContext.SaveChanges();
+                return true;
+            }
 
-                return false;
-            }
-            catch
-            {
-                throw;
-            }
+            return false;
         }
 
         bool IAuthorResponse.UpdateAuthor(Authors author)
         {
-            try
+            if (author != null)
             {
-                if (author != null)
-                {
-                    author.LastModified = DateTime.Now;
-                    _dbContext.Authors.Update(author);
-                    _dbContext.SaveChanges();
-                    return true;
-                }
+                author.LastModified = DateTime.Now;
+                _dbContext.AuthorsDb.Update(author);
+                _dbContext.SaveChanges();
+                return true;
+            }
                 
-                return false;
-            }
-            catch
-            {
-                throw;
-            }
+            return false;
         }
 
         Authors IAuthorResponse.DeleteAuthor(string id)
         {
-            try
+            Authors? author = _dbContext.AuthorsDb.Find(id);
+            if (author != null)
             {
-                Authors? author = _dbContext.Authors.Find(id);
-                if (author != null)
-                {
-                    _dbContext.Authors.Remove(author);
-                    _dbContext.SaveChanges();
-                    return author;
-                }
-                return null;
+                _dbContext.AuthorsDb.Remove(author);
+                _dbContext.SaveChanges();
+                return author;
             }
-            catch
-            {
-                throw;
-            }
+            return null;
         }
 
         public bool CheckAuthorExists(string id)
         {
-            return _dbContext.Authors.Find(id) != null;
+            return _dbContext.AuthorsDb.Find(id) != null;
         }
     }
 }

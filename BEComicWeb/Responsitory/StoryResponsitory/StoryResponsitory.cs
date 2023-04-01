@@ -9,71 +9,43 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
         readonly AppDbContext? _dbContext = new();
         public bool AddStory(Stories? story)
         {
-            try
+            if (story == null)
             {
-                if (story == null)
-                {
-                    return false;
-                }
-                _dbContext.Stories.Add(story);
-                return true;
+                return false;
             }
-            catch
-            {
-                throw;
-            }
+            _dbContext.StoriesDb.Add(story);
+            return true;
         }
 
         public bool CheckStoryExists(string? id)
         {
-            try
+            Stories? story =  _dbContext.StoriesDb.Find(id);
+            if (story != null)
             {
-                Stories? story =  _dbContext.Stories.Find(id);
-                if (story != null)
-                {
-                    return true;
-                }
-                return false;
+                return true;
             }
-            catch
-            {
-                throw;
-            }
+            return false;
         }
 
         public Stories? DeleteStory(string? id)
         {
-            try
+            Stories? story = _dbContext.StoriesDb.Find(id);
+            if (story != null)
             {
-                Stories? story = _dbContext.Stories.Find(id);
-                if (story != null)
-                {
-                    _dbContext.Stories.Remove(story);
-                }
-                return story;
+                _dbContext.StoriesDb.Remove(story);
             }
-            catch
-            {
-                throw;
-            }
+            return story;
         }
 
         public Stories? GetStoryDetail(string? id)
         {
-            try
-            {
-                Stories? story = _dbContext.Stories.Find(id);
-                return story;
-            }
-            catch
-            {
-                throw;
-            }
+            Stories? story = _dbContext.StoriesDb.Find(id);
+            return story;
         }
 
         public List<Stories> GetStoryDetails()
         {
-            List<Stories> stories = _dbContext.Stories.Where<Stories>(e => e.Status == true)
+            List<Stories> stories = _dbContext.StoriesDb.Where<Stories>(e => e.Status == true)
                                           .OrderByDescending(s => s.LastModified)
                                           .Take(20)
                                           .ToList();
@@ -82,20 +54,13 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
 
         public bool UpdateStory(Stories? story)
         {
-            try
+            if (story == null)
             {
-                if (story == null)
-                {
-                    return false;
-                }
-                story.LastModified = DateTime.Now;
-                _dbContext.Stories.Update(story);
-                return true;
+                return false;
             }
-            catch
-            {
-                throw;
-            }
+            story.LastModified = DateTime.Now;
+            _dbContext.StoriesDb.Update(story);
+            return true;
         }
     }
 }
