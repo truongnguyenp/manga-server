@@ -1,7 +1,11 @@
-﻿namespace BEComicWeb.Model.StoryModel
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BEComicWeb.Model.StoryModel
 {
     public class Stories
     {
+        [Key]
+        [Required]
         public string? Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }

@@ -1,15 +1,15 @@
-﻿namespace BEComicWeb.Model.StoryModel
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BEComicWeb.Model.StoryModel
 {
     public class StoryCategories
     {
-        public string? Id { get; set; }
+        [Key]
+        [Required]
         public string? StoryId { get; set; }
+        [Key]
+        [Required]
         public string? CategoryId { get; set; }
         public DateTime? Created { get; set; }
-        public DateTime? LastModified { get; set; }
-        public StoryCategories()
-        {
-            Id = Guid.NewGuid().ToString();
-        }
     }
 }

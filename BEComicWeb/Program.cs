@@ -24,6 +24,8 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
 
 builder.Services.AddScoped<IAuthorResponse, AuthorResponsitory>();
 builder.Services.AddScoped<IStoryResponse, StoryResponsitory>();
+builder.Services.AddScoped<IChapterResponse, ChapterResponsitory>();
+builder.Services.AddScoped<IAuthorResponse, AuthorResponsitory>();
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
 {

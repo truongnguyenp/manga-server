@@ -17,34 +17,41 @@ namespace BEComicWeb.Controllers
             _IStoryResponse = IStoryRes;
         }
 
-        // GET: story/all
-        [HttpGet("all")]
-        public async Task<ActionResult<IEnumerable<Stories>>> Get()
+        // Get List of stories.
+        // Type: Search --> Return {n_stories} stories which their names have {categ} for page {page}.
+        // Type: Category --> Return {n_stories} stories which their categories has {categ} for page {page}.
+        // Type: Newest --> Return the top {n_stories} newest stories for page {page}. 
+        // GET: {type}/{categ}/{page}
+        [HttpGet("list/{type}/{categ}/{page}")]
+        public async Task<ActionResult<IEnumerable<Stories>>> Get(string categ, int page, int n_stories, string type)
         {
-            return await Task.FromResult(_IStoryResponse.GetStoryDetails());
+            return await Task.FromResult(_IStoryResponse.GetStoryList(categ, page, n_stories, type));
         }
 
+        // Get Story by Id
         // GET story/{id}
-        [HttpGet("{id}")]
+        [HttpGet("{story_id}")]
         public async Task<ActionResult<Stories>> Get(string id)
         {
-            var Stories = await Task.FromResult(_IStoryResponse.GetStoryDetail(id));
-            if (Stories == null)
+            var story= await Task.FromResult(_IStoryResponse.GetStory(id));
+            if (story == null)
             {
                 return NotFound();
             }
-            return Stories;
+            return story;
         }
 
+        // Create new Story
         // POST story
-        [HttpPost]
+        [HttpPost("new")]
         public async Task<ActionResult<Stories>> Post(Stories Story)
         {
             _IStoryResponse.AddStory(Story);
             return await Task.FromResult(Story);
         }
 
-        // PUT story/{id}
+        // Update Story if this story is existed.
+        // PUT story/update/{id}
         [HttpPut("update/{id}")]
         public async Task<ActionResult<Stories>> Put(string id, Stories Story)
         {
@@ -70,9 +77,11 @@ namespace BEComicWeb.Controllers
             return await Task.FromResult(Story);
         }
 
+        // Delete Story
+        // Note: We need warning user before delete
         // DELETE story/delete/{id}
         [HttpDelete("delete/{id}")]
-        public async Task<ActionResult<Stories>> Delete(string id)
+        public async Task<ActionResult<Stories>> Delete(string? id)
         {
             var Story = _IStoryResponse.DeleteStory(id);
             return await Task.FromResult(Story);

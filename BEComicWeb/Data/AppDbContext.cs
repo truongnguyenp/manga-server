@@ -13,6 +13,7 @@ namespace BEComicWeb.Data
         public virtual DbSet<Categories> CategoriesDb { get; set; }
         public virtual DbSet<StoryAuthor> StoryAuthorDb { get; set; }
         public virtual DbSet<StoryTranslator> StoryTranslatorDb { get; set; }
+        public virtual DbSet<StoryCategories> StoryCategoriesDb { get; set; }
         public AppDbContext()
         {
         }
@@ -25,7 +26,7 @@ namespace BEComicWeb.Data
             {
                 entity.ToTable("Authors");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Id).HasColumnName("Id").IsRequired();
                 entity.Property(e => e.Name).HasMaxLength(60).IsUnicode(false);
                 entity.Property(e => e.Alias).HasMaxLength(60).IsUnicode(false);
                 entity.Property(e => e.National).HasMaxLength(30).IsUnicode(false);
@@ -38,7 +39,7 @@ namespace BEComicWeb.Data
             {
                 entity.ToTable("Stories");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Id).HasColumnName("Id").IsRequired();
                 entity.Property(e => e.Name).HasMaxLength(60).IsUnicode(false);
                 entity.Property(e => e.Alias).HasMaxLength(60).IsUnicode(false);
                 entity.Property(e => e.Image).HasMaxLength(60).IsUnicode(false);
@@ -53,7 +54,8 @@ namespace BEComicWeb.Data
             {
                 entity.ToTable("Chapters");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Id).HasColumnName("Id").IsRequired();
+                entity.Property(e => e.StoryId).IsRequired();
                 entity.Property(e => e.Name).HasMaxLength(60).IsUnicode(false);
                 entity.Property(e => e.Image).IsUnicode(false);
                 entity.Property(e => e.Views).IsUnicode(false);
@@ -66,7 +68,7 @@ namespace BEComicWeb.Data
             {
                 entity.ToTable("Categories");
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("Id");
+                entity.Property(e => e.Id).HasColumnName("Id").IsRequired();
                 entity.Property(e => e.Name).HasMaxLength(60).IsUnicode(false);
                 entity.Property(e => e.Description).HasMaxLength(1000).IsUnicode(false);
                 entity.Property(e => e.Alias).HasMaxLength(60).IsUnicode(false);
@@ -78,34 +80,28 @@ namespace BEComicWeb.Data
             builder.Entity<StoryAuthor>(entity =>
             {
                 entity.ToTable("StoryAuthor");
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("Id");
-                entity.Property(e => e.StoryId).IsUnicode(false);
-                entity.Property(e => e.AuthorId).IsUnicode(false);
+                entity.HasKey(e => new { e.StoryId, e.AuthorId });
+                entity.Property(e => e.StoryId).IsUnicode(false).IsRequired();
+                entity.Property(e => e.AuthorId).IsUnicode(false).IsRequired();
                 entity.Property(e => e.Created).IsUnicode(false);
-                entity.Property(e => e.LastModified).IsUnicode(false);
             });
 
             builder.Entity<StoryTranslator>(entity =>
             {
                 entity.ToTable("StoryTranslator");
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("Id");
-                entity.Property(e => e.StoryId).IsUnicode(false);
-                entity.Property(e => e.TranslatorId).IsUnicode(false);
+                entity.Property(e => e.StoryId).IsUnicode(false).IsRequired();
+                entity.Property(e => e.TranslatorId).IsUnicode(false).IsRequired();
                 entity.Property(e => e.Created).IsUnicode(false);
-                entity.Property(e => e.LastModified).IsUnicode(false);
+                entity.HasKey(e => new { e.StoryId, e.TranslatorId });
             });
 
-            builder.Entity<StoryChapters>(entity =>
+            builder.Entity<StoryCategories>(entity =>
             {
-                entity.ToTable("StoryChapters");
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Id).HasColumnName("Id");
-                entity.Property(e => e.StoryId).IsUnicode(false);
-                entity.Property(e => e.TranslatorId).IsUnicode(false);
+                entity.ToTable("StoryCategories");
+                entity.Property(e => e.StoryId).IsUnicode(false).IsRequired();
+                entity.Property(e => e.CategoryId).IsUnicode(false).IsRequired();
                 entity.Property(e => e.Created).IsUnicode(false);
-                entity.Property(e => e.LastModified).IsUnicode(false);
+                entity.HasKey(e => new { e.StoryId, e.CategoryId });
             });
 
             base.OnModelCreating(builder);
