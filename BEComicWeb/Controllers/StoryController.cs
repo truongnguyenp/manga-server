@@ -2,7 +2,7 @@
 using BEComicWeb.Model.StoryModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using BEComicWeb.Responsitory.StoryResponsitory;
+using BEComicWeb.Repository.StoryRepository;
 
 namespace BEComicWeb.Controllers
 {
@@ -10,11 +10,11 @@ namespace BEComicWeb.Controllers
     [ApiController]
     public class StoryController : ControllerBase
     {
-        private readonly IStoryResponse _IStoryResponse;
+        private readonly IStoryRepository _IStoryRepository;
 
-        public StoryController(IStoryResponse IStoryRes)
+        public StoryController(IStoryRepository IStoryRes)
         {
-            _IStoryResponse = IStoryRes;
+            _IStoryRepository = IStoryRes;
         }
 
         // Get List of stories.
@@ -25,7 +25,7 @@ namespace BEComicWeb.Controllers
         [HttpGet("list/{type}/{categ}/{page}")]
         public async Task<ActionResult<IEnumerable<Stories>>> Get(string categ, int page, int n_stories, string type)
         {
-            return await Task.FromResult(_IStoryResponse.GetStoryList(categ, page, n_stories, type));
+            return await Task.FromResult(_IStoryRepository.GetStoryList(categ, page, n_stories, type));
         }
 
         // Get Story by Id
@@ -33,7 +33,7 @@ namespace BEComicWeb.Controllers
         [HttpGet("{story_id}")]
         public async Task<ActionResult<Stories>> Get(string id)
         {
-            var story= await Task.FromResult(_IStoryResponse.GetStory(id));
+            var story= await Task.FromResult(_IStoryRepository.GetStory(id));
             if (story == null)
             {
                 return NotFound();
@@ -46,7 +46,7 @@ namespace BEComicWeb.Controllers
         [HttpPost("new")]
         public async Task<ActionResult<Stories>> Post(Stories Story)
         {
-            _IStoryResponse.AddStory(Story);
+            _IStoryRepository.AddStory(Story);
             return await Task.FromResult(Story);
         }
 
@@ -61,7 +61,7 @@ namespace BEComicWeb.Controllers
             }
             try
             {
-                _IStoryResponse.UpdateStory(Story);
+                _IStoryRepository.UpdateStory(Story);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,13 +83,13 @@ namespace BEComicWeb.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult<Stories>> Delete(string? id)
         {
-            var Story = _IStoryResponse.DeleteStory(id);
+            var Story = _IStoryRepository.DeleteStory(id);
             return await Task.FromResult(Story);
         }
 
         private bool StoryExists(string id)
         {
-            return _IStoryResponse.CheckStoryExists(id);
+            return _IStoryRepository.CheckStoryExists(id);
         }
     }
 }

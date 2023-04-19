@@ -21,11 +21,11 @@ namespace BEComicWeb.Model.Vultr
             form.Add(new StreamContent(file.OpenReadStream()), "file", file.FileName);
             form.Add(new StringContent(imageName), "description");
 
-            var response = await _httpClient.PostAsync($"{_options.BaseUrl}/v1/object/store", form);
+            var repos = await _httpClient.PostAsync($"{_options.BaseUrl}/v1/object/store", form);
 
-            response.EnsureSuccessStatusCode();
+            repos.EnsureSuccessStatusCode();
 
-            var json = await response.Content.ReadAsStringAsync();
+            var json = await repos.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<VultrUploadResult>(json);
 
             return result.data.id;
@@ -33,11 +33,11 @@ namespace BEComicWeb.Model.Vultr
 
         public async Task<Stream> GetImageAsync(string imageId)
         {
-            var response = await _httpClient.GetAsync($"{_options.BaseUrl}/v1/object/get/{imageId}");
+            var Repository = await _httpClient.GetAsync($"{_options.BaseUrl}/v1/object/get/{imageId}");
 
-            response.EnsureSuccessStatusCode();
+            Repository.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadAsStreamAsync();
+            return await Repository.Content.ReadAsStreamAsync();
         }
     }
 

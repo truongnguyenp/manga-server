@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using BEComicWeb.Interface.StoryInterface;
-using BEComicWeb.Model.StoryModel;
-using BEComicWeb.Responsitory;
+using BEComicWeb.Repository;
+using BEComicWeb.Model.PersonModel;
+using BEComicWeb.Model.ResponseModel;
 
 namespace BEComicWeb.Controllers
 {
@@ -12,25 +13,25 @@ namespace BEComicWeb.Controllers
     [ApiController]
     public class AuthorController : ControllerBase
     {
-        private readonly IAuthorResponse _IAuthorResponse;
+        private readonly IAuthorRepository _IAuthorRepository;
 
-        public AuthorController(IAuthorResponse IAuthorRes)
+        public AuthorController(IAuthorRepository IAuthorRes)
         {
-            _IAuthorResponse = IAuthorRes;
+            _IAuthorRepository = IAuthorRes;
         }
 
         // GET: author
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Authors>>> Get()
         {
-            return await Task.FromResult(_IAuthorResponse.GetAuthorDetails());
+            return await Task.FromResult(_IAuthorRepository.GetAuthorDetails());
         }
 
         // GET author/{id}
         [HttpGet("{id}")]
         public async Task<ActionResult<Authors>> Get(string id)
         {
-            var Authors = await Task.FromResult(_IAuthorResponse.GetAuthorDetail(id));
+            var Authors = await Task.FromResult(_IAuthorRepository.GetAuthorDetail(id));
             if (Authors == null)
             {
                 return NotFound();
@@ -42,7 +43,7 @@ namespace BEComicWeb.Controllers
         [HttpPost]
         public async Task<ActionResult<Authors>> Post(Authors author)
         {
-            _IAuthorResponse.AddAuthor(author);
+            _IAuthorRepository.AddAuthor(author);
             return await Task.FromResult(author);
         }
 
@@ -56,7 +57,7 @@ namespace BEComicWeb.Controllers
             }
             try
             {
-                _IAuthorResponse.UpdateAuthor(author);
+                _IAuthorRepository.UpdateAuthor(author);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -76,13 +77,13 @@ namespace BEComicWeb.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult<Authors>> Delete(string id)
         {
-            var author = _IAuthorResponse.DeleteAuthor(id);
+            var author = _IAuthorRepository.DeleteAuthor(id);
             return await Task.FromResult(author);
         }
         
         private bool AuthorExists(string id)
         {
-            return _IAuthorResponse.CheckAuthorExists(id);
+            return _IAuthorRepository.CheckAuthorExists(id);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using BEComicWeb.Interface.Vultr;
 using BEComicWeb.Model.Vultr;
 
-namespace BEComicWeb.Responsitory.Vultr
+namespace BEComicWeb.Repository.Vultr
 {
     public class VultrRepository : IVultrRepository
     {

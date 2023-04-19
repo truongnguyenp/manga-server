@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEComicWeb.Model.StoryModel
 {
@@ -7,7 +8,8 @@ namespace BEComicWeb.Model.StoryModel
         [Key]
         [Required]
         public string? Id { get; set; }
-        public string? StoryId { get; set; }
+        [ForeignKey("StoryId")]
+        public Stories? Story { get; set; }
         public int? ChapterNumner { get; set; }
         public string? Name { get; set; }
         public int? Cost { get; set; }

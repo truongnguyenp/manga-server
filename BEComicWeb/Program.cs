@@ -6,7 +6,9 @@ using System.Text;
 using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.StoryModel;
-using BEComicWeb.Responsitory.StoryResponsitory;
+using BEComicWeb.Repository.StoryRepository;
+using BEComicWeb.Interface.ImageInterface;
+using BEComicWeb.Repository.ImageRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -22,10 +24,12 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
-builder.Services.AddScoped<IAuthorResponse, AuthorResponsitory>();
-builder.Services.AddScoped<IStoryResponse, StoryResponsitory>();
-builder.Services.AddScoped<IChapterResponse, ChapterResponsitory>();
-builder.Services.AddScoped<IAuthorResponse, AuthorResponsitory>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IStoryRepository, StoryRepository>();
+builder.Services.AddScoped<IChapterRepository, ChapterRepository>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
 {

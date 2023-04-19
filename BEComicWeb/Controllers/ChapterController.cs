@@ -9,11 +9,11 @@ namespace BEComicWeb.Controllers
     [ApiController]
     public class ChapterController : Controller
     {
-        private readonly IChapterResponse _IChapterResponse;
+        private readonly IChapterRepository _IChapterRepository;
 
-        public ChapterController(IChapterResponse IChapterRes)
+        public ChapterController(IChapterRepository IChapterRes)
         {
-            _IChapterResponse = IChapterRes;
+            _IChapterRepository = IChapterRes;
         }
 
         // Get List of Chapters.
@@ -24,7 +24,7 @@ namespace BEComicWeb.Controllers
         [HttpGet("{type}/{categ}/{page}")]
         public async Task<ActionResult<IEnumerable<Chapters>>> Get(string categ, int page, int n_Chapters, string type)
         {
-            return await Task.FromResult(_IChapterResponse.GetChaptersList(categ, page, n_Chapters, type));
+            return await Task.FromResult(_IChapterRepository.GetChaptersList(categ, page, n_Chapters, type));
         }
 
         // Get Chapter by Id
@@ -32,7 +32,7 @@ namespace BEComicWeb.Controllers
         [HttpGet("Chapter/{Chapter_id}")]
         public async Task<ActionResult<Chapters>> Get(string id)
         {
-            var Chapter = await Task.FromResult(_IChapterResponse.GetChapter(id));
+            var Chapter = await Task.FromResult(_IChapterRepository.GetChapter(id));
             if (Chapter == null)
             {
                 return NotFound();
@@ -45,7 +45,7 @@ namespace BEComicWeb.Controllers
         [HttpPost("new-Chapter")]
         public async Task<ActionResult<Chapters>> Post(Chapters Chapter, string story_id, int chapter_number)
         {
-            _IChapterResponse.AddChapter(Chapter, story_id, chapter_number);
+            _IChapterRepository.AddChapter(Chapter, story_id, chapter_number);
             return await Task.FromResult(Chapter);
         }
 
@@ -60,7 +60,7 @@ namespace BEComicWeb.Controllers
             }
             try
             {
-                _IChapterResponse.UpdateChapter(Chapter);
+                _IChapterRepository.UpdateChapter(Chapter);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -82,13 +82,13 @@ namespace BEComicWeb.Controllers
         [HttpDelete("delete-Chapter/{id}")]
         public async Task<ActionResult<Chapters>> Delete(string id)
         {
-            var Chapter = _IChapterResponse.DeleteChapter(id);
+            var Chapter = _IChapterRepository.DeleteChapter(id);
             return await Task.FromResult(Chapter);
         }
 
         private bool ChapterExists(string id)
         {
-            return _IChapterResponse.CheckChapterExists(id);
+            return _IChapterRepository.CheckChapterExists(id);
         }
     }
 }

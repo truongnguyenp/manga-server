@@ -1,15 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEComicWeb.Model.StoryModel
 {
+    [Keyless]
     public class StoryCategories
     {
-        [Key]
-        [Required]
-        public string? StoryId { get; set; }
-        [Key]
-        [Required]
-        public string? CategoryId { get; set; }
+        [ForeignKey("StoryId")]
+        public Stories? Story { get; set; }
+        [ForeignKey("CategoryId")]
+        public Categories? Category { get; set; }
         public DateTime? Created { get; set; }
     }
 }
