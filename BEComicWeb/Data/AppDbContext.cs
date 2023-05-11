@@ -1,18 +1,17 @@
-﻿using BEComicWeb.Model.ImageModel;
-using BEComicWeb.Model.PersonModel;
+﻿using BEComicWeb.Model.AuthencationModel;
+using BEComicWeb.Model.ImageModel;
 using BEComicWeb.Model.StoryModel;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BEComicWeb.Data
 {
-    public class AppDbContext : IdentityDbContext<IdentityUser>
+    public class AppDbContext : IdentityDbContext<Users>
     {
-        public virtual DbSet<Authors>? AuthorsDb { get; set; }
         public virtual DbSet<Stories>? StoriesDb { get; set; }
         public virtual DbSet<Chapters>? ChaptersDb { get; set; }
         public virtual DbSet<Categories> CategoriesDb { get; set; }
+        public virtual DbSet<Authors> AuthorsDb { get; set; }
         public virtual DbSet<StoryAuthor> StoryAuthorDb { get; set; }
         public virtual DbSet<StoryTranslator> StoryTranslatorDb { get; set; }
         public virtual DbSet<StoryCategories> StoryCategoriesDb { get; set; }
@@ -27,6 +26,19 @@ namespace BEComicWeb.Data
         {
 
             base.OnModelCreating(builder);
+            builder.Ignore<UserInfo>();
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json")
+                   .Build();
+                var connectionString = configuration.GetConnectionString("connMSSQL");
+                optionsBuilder.UseSqlServer(connectionString);
+            }
         }
     }
 }

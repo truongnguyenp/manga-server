@@ -17,28 +17,40 @@ namespace BEComicWeb.Controllers
             _IStoryRepository = IStoryRes;
         }
 
-        // Get List of stories.
-        // Type: Search --> Return {n_stories} stories which their names have {categ} for page {page}.
-        // Type: Category --> Return {n_stories} stories which their categories has {categ} for page {page}.
-        // Type: Newest --> Return the top {n_stories} newest stories for page {page}. 
-        // GET: {type}/{categ}/{page}
-        [HttpGet("list/{type}/{categ}/{page}")]
-        public async Task<ActionResult<IEnumerable<Stories>>> Get(string categ, int page, int n_stories, string type)
+        // Get List of newest stories.
+        // GET: newest/{page}
+        [HttpGet("newest/{page}")]
+        public async Task<ActionResult<IEnumerable<Stories>>> Get(int page, int n_stories)
         {
-            return await Task.FromResult(_IStoryRepository.GetStoryList(categ, page, n_stories, type));
+            return await Task.FromResult(_IStoryRepository.GetNewestStoryList(page, n_stories));
+        }
+
+        // Get List of newest stories.
+        // GET: search/{page}
+        [HttpGet("search/{search_string}/{page}")]
+        public async Task<ActionResult<IEnumerable<Stories>>> Get(string search_string, int page, int n_stories)
+        {
+            return await Task.FromResult(_IStoryRepository.SearchStory(search_string, page, n_stories));
         }
 
         // Get Story by Id
         // GET story/{id}
         [HttpGet("{story_id}")]
-        public async Task<ActionResult<Stories>> Get(string id)
+        public async Task<ActionResult<Stories>> Get(string story_id)
         {
-            var story= await Task.FromResult(_IStoryRepository.GetStory(id));
+            var story= await Task.FromResult(_IStoryRepository.GetStory(story_id));
             if (story == null)
             {
                 return NotFound();
             }
             return story;
+        }
+
+        [HttpGet("n_pages")]
+        public async Task<ActionResult<int>> Get(string search_string, int n_stories)
+        {
+            var n_pages = await Task.FromResult(_IStoryRepository.GetSearchStoryListSize(search_string));
+            return (ActionResult<int>)Math.Ceiling((double)n_pages / n_stories);
         }
 
         // Create new Story

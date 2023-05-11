@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace BEComicWeb.Model.PersonModel
+namespace BEComicWeb.Model.StoryModel
 {
-    public class Translators
+    public class Authors
     {
         [PersonalData]
         [Required]
@@ -13,5 +13,9 @@ namespace BEComicWeb.Model.PersonModel
         public string? National { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastModified { get; set; }
+        public Authors()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
     }
 }

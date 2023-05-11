@@ -13,12 +13,12 @@ namespace BEComicWeb.Controllers
     [ApiController]
     public class AuthenticateController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<Users> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
         public AuthenticateController(
-            UserManager<IdentityUser> userManager,
+            UserManager<Users> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration)
         {
@@ -66,7 +66,7 @@ namespace BEComicWeb.Controllers
             if (userExists != null)
                 return StatusCode(StatusCodes.Status400BadRequest, new Response("Error",  "User already exists!"));
 
-            IdentityUser user = new()
+            Users user = new()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -87,7 +87,7 @@ namespace BEComicWeb.Controllers
             if (userExists != null)
                 return StatusCode(StatusCodes.Status400BadRequest, new Response("Error", "User already exists!"));
 
-            IdentityUser user = new()
+            Users user = new()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
@@ -108,7 +108,7 @@ namespace BEComicWeb.Controllers
             if (userExists != null)
                 return StatusCode(StatusCodes.Status400BadRequest, new Response("Error", "User already exists!"));
 
-            IdentityUser user = new()
+            Users user = new()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),

@@ -1,6 +1,6 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
-using BEComicWeb.Model.PersonModel;
+using BEComicWeb.Model.StoryModel;
 
 namespace BEComicWeb.Repository.StoryRepository
 {
@@ -30,14 +30,10 @@ namespace BEComicWeb.Repository.StoryRepository
             return result;
         }
 
-        public Authors GetAuthorDetail(string? id)
+        public Authors? GetAuthorDetail(string? id)
         {
             Authors? author = _dbContext.AuthorsDb.Find(id);
-            if (author != null)
-            {
-                return author;
-            }
-            return new();
+            return author;
         }
 
         public bool UpdateAuthor(Authors? author)

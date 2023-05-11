@@ -1,5 +1,5 @@
-﻿using BEComicWeb.Model.ResponseModel;
-using BEComicWeb.Model.PersonModel;
+﻿using BEComicWeb.Model.StoryModel; 
+using BEComicWeb.Model.ResponseModel;
 
 namespace BEComicWeb.Interface.StoryInterface
 {

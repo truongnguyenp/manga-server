@@ -1,4 +1,4 @@
-﻿using BEComicWeb.Model.PersonModel;
+﻿using BEComicWeb.Model.AuthencationModel;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,7 +9,7 @@ namespace BEComicWeb.Model.StoryModel
     public class StoryAuthor
     {
         [ForeignKey("AuthorId")]
-        public Authors? Author { get; set; }
+        public Users? Author { get; set; }
         [ForeignKey("StoryId")]
         public Stories? Story { get; set; }
         public DateTime? Created { get; set; }

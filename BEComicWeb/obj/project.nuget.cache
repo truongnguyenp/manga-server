@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "8Ld4p7YbAAKN/+4U3AzG6tS/U5f1M27ElBLDtr4+tF32f5jr2DSKihIlapqzCO3hEfT4+UMnB5/jv81x0DlcGQ==",
+  "dgSpecHash": "/5syEIgfVaKzUFhzeWbEA/yb5UsafnfJe+rKQk2Y1AkQxuoJxjoiPIrudUMtX1BYofK5eMMUGn7NxKfFFOIfIg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\leatu\\OneDrive - The University of Technology\\Desktop\\manga-server\\BEComicWeb\\BEComicWeb.csproj",
+  "projectFilePath": "C:\\Users\\leatu\\OneDrive - The University of Technology\\Desktop\\pbl3\\manga-server\\BEComicWeb\\BEComicWeb.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\leatu\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\leatu\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.14\\microsoft.aspnetcore.authentication.jwtbearer.6.0.14.nupkg.sha512",

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Repository;
-using BEComicWeb.Model.PersonModel;
+using BEComicWeb.Model.StoryModel;
 using BEComicWeb.Model.ResponseModel;
 
 namespace BEComicWeb.Controllers

@@ -13,7 +13,6 @@ namespace BEComicWeb.Model.StoryModel
         public string? Keyword { get; set; }
         public DateTime? Created { get; set; }
         public DateTime? LastModified { get; set;}
-
         public Categories()
         {
             Id = Guid.NewGuid().ToString();

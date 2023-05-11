@@ -4,8 +4,9 @@ namespace BEComicWeb.Interface.StoryInterface
 {
     public interface IStoryRepository
     {
-        public List<Stories> GetStoryList(string? categ, int number, int n_chapters = 30, string type = "category");
-        public int GetStoryListSize(string? categ, string? type);
+        public List<Stories> GetNewestStoryList(int page, int n_stories = 30);
+        public List<Stories> SearchStory(string search_string, int page, int n_stories = 30);
+        public int GetSearchStoryListSize(string? search_string);
         public Stories? GetStory(string? id);
         public bool AddStory(Stories? story);
         public bool UpdateStory(Stories? story);
