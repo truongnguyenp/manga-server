@@ -29,7 +29,7 @@ namespace BEComicWeb.Controllers
 
         // Get Chapter by Id
         // GET Chapter/{id}
-        [HttpGet("Chapter/{Chapter_id}")]
+        [HttpGet("chapter/{id}")]
         public async Task<ActionResult<Chapters>> Get(string id)
         {
             var Chapter = await Task.FromResult(_IChapterRepository.GetChapter(id));
@@ -42,7 +42,7 @@ namespace BEComicWeb.Controllers
 
         // Create new Chapter
         // POST Chapter
-        [HttpPost("new-Chapter")]
+        [HttpPost("chapter/new/{story_id}/{chapter_number}")]
         public async Task<ActionResult<Chapters>> Post(Chapters Chapter, string story_id, int chapter_number)
         {
             _IChapterRepository.AddChapter(Chapter, story_id, chapter_number);
@@ -51,7 +51,7 @@ namespace BEComicWeb.Controllers
 
         // Update Chapter if this Chapter is existed.
         // PUT Chapter/update/{id}
-        [HttpPut("update-Chapter/{id}")]
+        [HttpPut("chapter/update/{id}")]
         public async Task<ActionResult<Chapters>> Put(string id, Chapters Chapter)
         {
             if (id != Chapter.Id)
@@ -79,7 +79,7 @@ namespace BEComicWeb.Controllers
         // Delete Chapter
         // Note: We need warning user before delete
         // DELETE Chapter/delete/{id}
-        [HttpDelete("delete-Chapter/{id}")]
+        [HttpDelete("chapter/delete/{id}")]
         public async Task<ActionResult<Chapters>> Delete(string id)
         {
             var Chapter = _IChapterRepository.DeleteChapter(id);
