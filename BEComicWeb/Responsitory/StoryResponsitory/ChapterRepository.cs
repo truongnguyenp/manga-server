@@ -46,12 +46,6 @@ namespace BEComicWeb.Repository.StoryRepository
             return chapter;
         }
 
-        public List<Chapters> GetAllChaptersOfStory(string story_id)
-        {
-            var res = _dbContext.ChaptersDb.Where(e => e.Story.Id == story_id).ToList();
-            return res;
-        }
-
         public Chapters? GetChapter(string? chapter_id)
         {
             if (chapter_id == null)
@@ -80,17 +74,6 @@ namespace BEComicWeb.Repository.StoryRepository
                     return chapter;
                 }
             }
-            return null;
-        }
-
-        public List<Chapters> GetNewChapters(int pages, int n_chapters)
-        {
-            var res = _dbContext.ChaptersDb.OrderByDescending(e => e.LastModified)
-                                           .GroupBy(e => e.Story.Id)
-                                           .First()
-                                           .Take(n_chapters)
-                                           .Skip(n_chapters * (pages - 1))
-                                           .ToList();
             return null;
         }
     }

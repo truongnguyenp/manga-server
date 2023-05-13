@@ -13,5 +13,6 @@ namespace BEComicWeb.Interface.StoryInterface
         public Stories UpdateStory(Stories? story);
         Stories DeleteStory(string? id);
         public bool CheckStoryExists(string? id);
+        public List<Chapters> GetAllChaptersOfStory(string story_id);
     }
 }

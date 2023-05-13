@@ -5,7 +5,6 @@ namespace BEComicWeb.Interface.StoryInterface
     public interface IChapterRepository
     {
         public Chapters GetNewestChapterOfStory(string story_id);
-        public List<Chapters> GetAllChaptersOfStory(string story_id);
         public Chapters GetChapter(string chapter_id);
         public Chapters AddChapter(Chapters chapter);
         public Chapters UpdateChapter(Chapters chapter);

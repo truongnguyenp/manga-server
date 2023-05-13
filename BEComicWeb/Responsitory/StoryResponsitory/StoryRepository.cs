@@ -90,5 +90,11 @@ namespace BEComicWeb.Repository.StoryRepository
         {
             return _dbContext.StoriesDb.Count();
         }
+
+        public List<Chapters> GetAllChaptersOfStory(string story_id)
+        {
+            var res = _dbContext.ChaptersDb.Where(e => e.Story.Id == story_id).ToList();
+            return res;
+        }
     }
 }
