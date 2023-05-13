@@ -1,1 +1,47 @@
 appsetting.json
+# Binaries
+bin/
+obj/
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+build/
+*.publish.xml
+
+# Logs and databases
+*.log
+*.sqlite
+
+# Visual Studio files
+*.suo
+*.user
+*.sln.docstates
+*.vsp
+*.psess
+
+# Resharper files
+_ReSharper*/
+*.ReSharper*
+
+# Visual Studio Code files
+.vscode/
+
+# NuGet packages
+*.nupkg
+packages/
+
+# Cache directories
+*[Dd]ebug*/
+*.dbmdl
+*.jfm
+*.bak
+*.cache
+*.sqlitestudio
+
+# .NET Core files
+project.lock.json
+project.fragment.lock.json
+artifacts/
+*.userprefs
