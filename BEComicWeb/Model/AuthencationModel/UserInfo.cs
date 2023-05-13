@@ -7,7 +7,6 @@ namespace BEComicWeb.Model.AuthencationModel
     public class UserInfo
     {
         [PersonalData]
-        [Required]
         public string? Id { get; set; }
         public string? Name { get; set; }
         public int? Coins { get; set; }

@@ -41,14 +41,15 @@ namespace BEComicWeb.Controllers
         // Get Story by Id
         // GET story/{id}
         [HttpGet("{story_id}")]
-        public async Task<ActionResult<Stories>> Get(string story_id)
+        public async Task<ActionResult<object>> Get(string story_id)
         {
             var story= await Task.FromResult(_IStoryRepository.GetStory(story_id));
             if (story == null)
             {
                 return NotFound();
             }
-            return story;
+            var chapters = _IStoryRepository.GetAllChaptersOfStory(story_id);
+            return new { story, chapters};
         }
 
         [HttpGet("n_pages")]
