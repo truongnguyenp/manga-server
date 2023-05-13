@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BEComicWeb.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230513035154_delete_required_name")]
+    [Migration("20230513034948_delete_required_name")]
     partial class delete_required_name
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -183,7 +183,7 @@ namespace BEComicWeb.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ChapterNumner")
+                    b.Property<int?>("ChapterNumber")
                         .HasColumnType("int");
 
                     b.Property<int?>("Cost")

@@ -72,10 +72,18 @@ namespace BEComicWeb.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Reader))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Reader));
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.Reader))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.Reader);
+            }
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response("Error", "User creation failed! Please check user details and try again."));
-
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Reader))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Reader));
             return Ok(new Response("Success", "User created successfully!"));
         }
 
@@ -93,10 +101,18 @@ namespace BEComicWeb.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Translator))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Translator));
+
+            if (await _roleManager.RoleExistsAsync(UserRoles.Translator))
+            {
+                await _userManager.AddToRoleAsync(user, UserRoles.Translator);
+            }
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
                 return StatusCode(StatusCodes.Status500InternalServerError, new Response("Error", "User creation failed! Please check user details and try again."));
-
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Translator))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Translator));
             return Ok(new Response("Success", "User created successfully!"));
         }
 
@@ -120,22 +136,10 @@ namespace BEComicWeb.Controllers
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Translator))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Translator));
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Reader))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Reader));
 
             if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.Admin);
-            }
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Translator);
-            }
-            if (await _roleManager.RoleExistsAsync(UserRoles.Admin))
-            {
-                await _userManager.AddToRoleAsync(user, UserRoles.Reader);
             }
             return Ok(new Response("Success", "User created successfully!"));
         }

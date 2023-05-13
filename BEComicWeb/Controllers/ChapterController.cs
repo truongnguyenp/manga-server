@@ -16,16 +16,18 @@ namespace BEComicWeb.Controllers
             _IChapterRepository = IChapterRes;
         }
 
-        // Get List of Chapters.
-        // Type: Search --> Return {n_Chapters} Chapters which their names have {categ} for page {page}.
-        // Type: Category --> Return {n_Chapters} Chapters which their categories has {categ} for page {page}.
-        // Type: Newest --> Return the top {n_Chapters} newest Chapters for page {page}. 
-        // GET: list/
-        [HttpGet("{type}/{categ}/{page}")]
-        public async Task<ActionResult<IEnumerable<Chapters>>> Get(string categ, int page, int n_Chapters, string type)
+        [HttpGet("{story_id}")]
+        public async Task<ActionResult<IEnumerable<Chapters>>> GetAllChaptersOfStory(string story_id)
         {
-            return await Task.FromResult(_IChapterRepository.GetChaptersList(categ, page, n_Chapters, type));
+            return await Task.FromResult(_IChapterRepository.GetAllChaptersOfStory(story_id));
         }
+
+        [HttpGet("{story_id}/newest-chapter")]
+        public async Task<ActionResult<Chapters>> GetNewestChapterOfStory(string story_id)
+        {
+            return await Task.FromResult(_IChapterRepository.GetNewestChapterOfStory(story_id));
+        }
+
 
         // Get Chapter by Id
         // GET Chapter/{id}
@@ -42,15 +44,14 @@ namespace BEComicWeb.Controllers
 
         // Create new Chapter
         // POST Chapter
-        [HttpPost("new/{story_id}/{chapter_number}")]
-        public async Task<ActionResult<Chapters>> Post(Chapters Chapter, string story_id, int chapter_number)
+        [HttpPost("new")]
+        public async Task<ActionResult<Chapters>> Post(Chapters Chapter)
         {
-            _IChapterRepository.AddChapter(Chapter, story_id, chapter_number);
-            return await Task.FromResult(Chapter);
+            return await Task.FromResult(_IChapterRepository.AddChapter(Chapter));
         }
 
         // Update Chapter if this Chapter is existed.
-        // PUT Chapter/update/{id}
+
         [HttpPut("update/{id}")]
         public async Task<ActionResult<Chapters>> Put(string id, Chapters Chapter)
         {
@@ -77,15 +78,12 @@ namespace BEComicWeb.Controllers
         }
 
         // Delete Chapter
-        // Note: We need warning user before delete
-        // DELETE Chapter/delete/{id}
         [HttpDelete("delete/{id}")]
         public async Task<ActionResult<Chapters>> Delete(string id)
         {
             var Chapter = _IChapterRepository.DeleteChapter(id);
             return await Task.FromResult(Chapter);
         }
-
         private bool ChapterExists(string id)
         {
             return _IChapterRepository.CheckChapterExists(id);

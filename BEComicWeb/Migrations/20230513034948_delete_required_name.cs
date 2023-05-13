@@ -8,6 +8,11 @@ namespace BEComicWeb.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.RenameColumn(
+                name: "ChapterNumner",
+                table: "ChaptersDb",
+                newName: "ChapterNumber");
+
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "AspNetUsers",
@@ -19,6 +24,11 @@ namespace BEComicWeb.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.RenameColumn(
+                name: "ChapterNumber",
+                table: "ChaptersDb",
+                newName: "ChapterNumner");
+
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
                 table: "AspNetUsers",

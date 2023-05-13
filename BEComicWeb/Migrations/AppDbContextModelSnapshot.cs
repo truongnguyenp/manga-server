@@ -181,7 +181,7 @@ namespace BEComicWeb.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ChapterNumner")
+                    b.Property<int?>("ChapterNumber")
                         .HasColumnType("int");
 
                     b.Property<int?>("Cost")
