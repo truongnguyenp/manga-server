@@ -1,10 +1,6 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.StoryModel;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Xml;
-using Renci.SshNet;
 
 
 namespace BEComicWeb.Repository.StoryRepository
@@ -19,12 +15,13 @@ namespace BEComicWeb.Repository.StoryRepository
                 return false;
             }
             _dbContext.StoriesDb.Add(story);
+            _dbContext.SaveChanges();
             return true;
         }
 
         public bool CheckStoryExists(string? id)
         {
-            Stories? story =  _dbContext.StoriesDb.Find(id);
+            Stories? story = _dbContext.StoriesDb.Find(id);
             if (story != null)
             {
                 return true;
@@ -35,9 +32,10 @@ namespace BEComicWeb.Repository.StoryRepository
         public Stories? DeleteStory(string? id)
         {
             Stories? story = _dbContext.StoriesDb.Find(id);
-            if (story != null) {
+            if (story != null)
+            {
                 var chapters = from chapter in _dbContext.ChaptersDb
-                               where  chapter.Story.Id == id
+                               where chapter.Story.Id == id
                                select chapter;
                 _dbContext.ChaptersDb.RemoveRange(chapters.ToList());
                 _dbContext.StoriesDb.Remove(story);
@@ -52,7 +50,7 @@ namespace BEComicWeb.Repository.StoryRepository
             return story;
         }
 
-        public List<Stories> GetNewestStoryList(int page, int n_stories=30)
+        public List<Stories> GetNewestStoryList(int page, int n_stories = 30)
         {
             List<Stories> res = _dbContext.StoriesDb.OrderByDescending(e => e.LastModified)
                                                     .Take(n_stories)
