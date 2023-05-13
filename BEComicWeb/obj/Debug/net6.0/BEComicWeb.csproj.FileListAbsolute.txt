@@ -375,3 +375,9 @@ C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server
 C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\obj\Debug\net6.0\BEComicWeb.csproj.CopyComplete
 C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\obj\Debug\net6.0\BEComicWeb.genruntimeconfig.cache
 C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\obj\Debug\net6.0\ref\BEComicWeb.dll
+D:\PBL3\Server\BEComicWeb\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\PBL3\Server\BEComicWeb\bin\Debug\net6.0\Renci.SshNet.Async.dll
+D:\PBL3\Server\BEComicWeb\bin\Debug\net6.0\Renci.SshNet.dll
+D:\PBL3\Server\BEComicWeb\bin\Debug\net6.0\SshNet.Security.Cryptography.dll
+D:\PBL3\Server\BEComicWeb\bin\Debug\net6.0\System.Xml.XPath.XmlDocument.dll
+D:\PBL3\Server\BEComicWeb\bin\Debug\net6.0\Vultr.API.dll
