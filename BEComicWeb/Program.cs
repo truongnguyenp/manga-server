@@ -9,6 +9,7 @@ using BEComicWeb.Model.StoryModel;
 using BEComicWeb.Repository.StoryRepository;
 using BEComicWeb.Interface.ImageInterface;
 using BEComicWeb.Repository.ImageRepository;
+using BEComicWeb.Model.AuthencationModel;
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;
@@ -20,7 +21,7 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("connMSSQL")));
 
 // For Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<Users, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 

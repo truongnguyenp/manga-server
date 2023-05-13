@@ -14,8 +14,6 @@ namespace BEComicWeb.Controllers
         {
             _IStoryCategoriesRepository = _IStoryCategoriesRepos;
         }
-        // Get List of newest stories.
-        // GET: newest/{page}
         [HttpGet("list")]
         public async Task<ActionResult<IEnumerable<StoryCategories>>> Get(Stories? story)
         {
@@ -26,7 +24,7 @@ namespace BEComicWeb.Controllers
         {
             return await Task.FromResult(_IStoryCategoriesRepository.addStoryCategory(story_cate));
         }
-        [HttpPost("delete")]
+        [HttpDelete("delete")]
         public async Task<ActionResult<StoryCategories>> Delete(StoryCategories? story_cate)
         {
             return await Task.FromResult(_IStoryCategoriesRepository.deleteStoryCategory(story_cate));

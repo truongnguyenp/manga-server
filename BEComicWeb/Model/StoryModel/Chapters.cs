@@ -6,11 +6,10 @@ namespace BEComicWeb.Model.StoryModel
     public class Chapters
     {
         [Key]
-        [Required]
         public string? Id { get; set; }
         [ForeignKey("StoryId")]
         public Stories? Story { get; set; }
-        public int? ChapterNumner { get; set; }
+        public int? ChapterNumber { get; set; }
         public string? Name { get; set; }
         public int? Cost { get; set; }
         public string? Image { get; set; }

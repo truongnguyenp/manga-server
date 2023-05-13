@@ -8,7 +8,6 @@ namespace BEComicWeb.Model.AuthencationModel
     public class Users : IdentityUser
     {
         [PersonalData]
-        [Required]
         public string? Name { get; set; }
         [ForeignKey("ImageId")]
         public Image? UserImage { get; set; }

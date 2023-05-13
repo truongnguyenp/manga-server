@@ -26,7 +26,7 @@ namespace BEComicWeb.Controllers
         // Get List of newest Categories.
         // GET: search/{page}
         [HttpGet("search/{search_string}")]
-        public async Task<ActionResult<IEnumerable<Stories>>> Get(string search_string, int n_categories)
+        public async Task<ActionResult<IEnumerable<Stories>>> searchStoriesByCategory(string search_string)
         {
             return await Task.FromResult(_ICategoriesRepository.searchStoriesByCategory(search_string));
         }
@@ -44,8 +44,8 @@ namespace BEComicWeb.Controllers
             return category;
         }
 
-        [HttpGet("/{categoriy_name}")]
-        public async Task<ActionResult<int>> Get(string category_id, string categoriy_name)
+        [HttpGet("/{category_id}/stories")]
+        public async Task<ActionResult<int>> getStoriesOfCategorySize(string category_id)
         {
             var n_pages = await Task.FromResult(_ICategoriesRepository.getStoriesOfCategorySize(category_id));
             return n_pages;

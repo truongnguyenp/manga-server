@@ -12,14 +12,17 @@ namespace BEComicWeb.Repository.StoryRepository
     public class StoryRepository : IStoryRepository
     {
         readonly AppDbContext? _dbContext = new();
-        public bool AddStory(Stories? story)
+        public Stories AddStory(Stories? story)
         {
             if (story == null)
             {
-                return false;
+                return null;
             }
+            story.CreatedDate = DateTime.Now;
+            story.LastModified = DateTime.Now;
             _dbContext.StoriesDb.Add(story);
-            return true;
+            _dbContext.SaveChanges();
+            return story;
         }
 
         public bool CheckStoryExists(string? id)
@@ -70,20 +73,25 @@ namespace BEComicWeb.Repository.StoryRepository
             return query;
         }
 
-        public bool UpdateStory(Stories? story)
+        public Stories UpdateStory(Stories? story)
         {
             if (story == null)
             {
-                return false;
+                return null;
             }
             story.LastModified = DateTime.Now;
             _dbContext.StoriesDb.Update(story);
             _dbContext.SaveChanges();
-            return true;
+            return story;
         }
         public int GetSearchStoryListSize(string? search_string)
         {
             return _dbContext.StoriesDb.Where(e => e.Name.ToLower().Contains(search_string.ToLower())).Count();
+        }
+
+        public int? GetStorySize()
+        {
+            return _dbContext.StoriesDb.Count();
         }
     }
 }

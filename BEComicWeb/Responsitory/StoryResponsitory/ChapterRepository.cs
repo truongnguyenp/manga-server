@@ -4,30 +4,29 @@ using BEComicWeb.Model.StoryModel;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace BEComicWeb.Repository.StoryRepository
 {
-	public class ChapterRepository : IChapterRepository
-	{
-		readonly AppDbContext _dbContext = new();
+    public class ChapterRepository : IChapterRepository
+    {
+        readonly AppDbContext _dbContext = new();
 
-        public bool AddChapter(Chapters chapter, string story_id, int chapter_number)
+        public Chapters AddChapter(Chapters chapter)
         {
-            if (chapter != null && story_id != null)
+            if (chapter != null && chapter.Story.Id != null)
             {
-                var story = _dbContext.StoriesDb.Find(story_id);
+                var story = _dbContext.StoriesDb.Find(chapter.Story.Id);
                 if (story == null)
                 {
-                    return false;
+                    return null;
                 }
+                story.LastModified = DateTime.Now;
                 _dbContext.ChaptersDb.Add(chapter);
                 _dbContext.SaveChanges();
-                return true;
+                return chapter;
             }
-            else
-            {
-                return false;
-            }
+            return null;
         }
 
         public bool CheckChapterExists(string id)
@@ -36,82 +35,63 @@ namespace BEComicWeb.Repository.StoryRepository
             return chapter != null;
         }
 
-        public Chapters DeleteChapter(string id)
+        public Chapters? DeleteChapter(string? id)
         {
-            Chapters chapter = _dbContext.ChaptersDb.Find(id);
+            Chapters? chapter = _dbContext.ChaptersDb?.Find(id);
             if (chapter != null)
             {
-                _dbContext.ChaptersDb.Remove(chapter);
-                _dbContext.SaveChanges();    
+                _dbContext.ChaptersDb?.Remove(chapter);
+                _dbContext.SaveChanges();
             }
             return chapter;
         }
 
         public List<Chapters> GetAllChaptersOfStory(string story_id)
         {
-            throw new NotImplementedException();
-        }
-
-        public Chapters GetChapter(string chapter_id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Chapters> GetChaptersList(string? categ, int page, int n_chapters, string type)
-        {
-            List<Chapters> res;
-            if (type.ToLower() == "newest")
-            {
-                res = _dbContext.ChaptersDb.OrderByDescending(e => e.Created)
-                                           .Take(n_chapters)
-                                           .Skip(n_chapters * (page - 1))
-                                           .ToList();
-            }
-            else if (type.ToLower() == "category")
-            {
-                var category_id = from category in _dbContext.CategoriesDb
-                                  where category.Name.ToLower() == categ.ToLower()
-                                  select category.Id;
-                var StoryId_list = from story_category in _dbContext.StoryCategoriesDb
-                                 join story in _dbContext.StoriesDb on story_category.Story.Id equals story.Id
-                                 select story.Id;
-                var chapter_list = from chapter in _dbContext.ChaptersDb
-                                   join story_id in StoryId_list on chapter.Story.Id equals story_id
-                                   select chapter;
-
-                res = chapter_list.OrderByDescending(e => e.Created)
-                                  .Take(n_chapters)
-                                  .Skip(n_chapters * (page - 1))
-                                  .ToList();
-            }
-            else if (type.ToLower() == "search")
-            {
-                var chapter_query = from story in _dbContext.StoriesDb
-                                  join chapter in _dbContext.ChaptersDb on story.Id equals chapter.Story.Id
-                                  where story.Name.ToLower() == categ.ToLower()
-                                  orderby chapter.LastModified ascending
-                                  select chapter;
-                res = chapter_query.OrderByDescending(e => e.Created)
-                                   .Take(n_chapters)
-                                   .Skip(n_chapters * (page - 1))
-                                   .ToList();
-            }
-            else
-            {
-                res = new List<Chapters>();
-            }
+            var res = _dbContext.ChaptersDb.Where(e => e.Story.Id == story_id).ToList();
             return res;
         }
 
-        public bool UpdateChapter(Chapters chapter)
+        public Chapters? GetChapter(string? chapter_id)
         {
-            if (chapter == null)
+            if (chapter_id == null)
             {
-                return false;
+                return null;
             }
-            _dbContext.ChaptersDb.Update(chapter);
-            _dbContext.SaveChanges();
-            return true;
+            var res = _dbContext.ChaptersDb?.Find(chapter_id);
+            return res;
+        }
+        public Chapters? GetNewestChapterOfStory(string story_id)
+        {
+            var res = _dbContext.ChaptersDb.Where(e => e.Story.Id == story_id)
+                                           .OrderByDescending(e => e.LastModified)
+                                           .First();
+            return res;
+        }
+        public Chapters? UpdateChapter(Chapters chapter)
+        {
+            if (chapter != null)
+            {
+                var old = _dbContext.ChaptersDb.Find(chapter.Id);
+                if (old != null)
+                {
+                    _dbContext.ChaptersDb.Update(chapter);
+                    _dbContext.SaveChanges();
+                    return chapter;
+                }
+            }
+            return null;
+        }
+
+        public List<Chapters> GetNewChapters(int pages, int n_chapters)
+        {
+            var res = _dbContext.ChaptersDb.OrderByDescending(e => e.LastModified)
+                                           .GroupBy(e => e.Story.Id)
+                                           .First()
+                                           .Take(n_chapters)
+                                           .Skip(n_chapters * (pages - 1))
+                                           .ToList();
+            return null;
         }
     }
 }

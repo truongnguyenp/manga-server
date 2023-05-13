@@ -20,15 +20,20 @@ namespace BEComicWeb.Controllers
         // Get List of newest stories.
         // GET: newest/{page}
         [HttpGet("newest/{page}")]
-        public async Task<ActionResult<IEnumerable<Stories>>> Get(int page, int n_stories)
+        public async Task<ActionResult<IEnumerable<Stories>>> GetNewestStoryList(int page, int n_stories)
         {
             return await Task.FromResult(_IStoryRepository.GetNewestStoryList(page, n_stories));
+        }
+        [HttpGet("newest/n-pages")]
+        public async Task<ActionResult<int>> GetStorySize(int n_stories)
+        {
+            return (ActionResult<int>)await Task.FromResult(Math.Ceiling((double)_IStoryRepository.GetStorySize() / n_stories));
         }
 
         // Get List of newest stories.
         // GET: search/{page}
         [HttpGet("search/{search_string}/{page}")]
-        public async Task<ActionResult<IEnumerable<Stories>>> Get(string search_string, int page, int n_stories)
+        public async Task<ActionResult<IEnumerable<Stories>>> SearchStory(string search_string, int page, int n_stories)
         {
             return await Task.FromResult(_IStoryRepository.SearchStory(search_string, page, n_stories));
         }
@@ -47,7 +52,7 @@ namespace BEComicWeb.Controllers
         }
 
         [HttpGet("n_pages")]
-        public async Task<ActionResult<int>> Get(string search_string, int n_stories)
+        public async Task<ActionResult<int>> GetSearchStoryListSize(string search_string, int n_stories)
         {
             var n_pages = await Task.FromResult(_IStoryRepository.GetSearchStoryListSize(search_string));
             return (ActionResult<int>)Math.Ceiling((double)n_pages / n_stories);
@@ -58,13 +63,12 @@ namespace BEComicWeb.Controllers
         [HttpPost("new")]
         public async Task<ActionResult<Stories>> Post(Stories Story)
         {
-            _IStoryRepository.AddStory(Story);
-            return await Task.FromResult(Story);
+            return await Task.FromResult(_IStoryRepository.AddStory(Story));
         }
 
         // Update Story if this story is existed.
         // PUT story/update/{id}
-        [HttpPut("update/{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<Stories>> Put(string id, Stories Story)
         {
             if (id != Story.Id)
@@ -91,8 +95,8 @@ namespace BEComicWeb.Controllers
 
         // Delete Story
         // Note: We need warning user before delete
-        // DELETE story/delete/{id}
-        [HttpDelete("delete/{id}")]
+        // DELETE story/{id}
+        [HttpDelete("{id}")]
         public async Task<ActionResult<Stories>> Delete(string? id)
         {
             var Story = _IStoryRepository.DeleteStory(id);
