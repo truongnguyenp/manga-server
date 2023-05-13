@@ -1,5 +1,4 @@
 ﻿using BEComicWeb.Model.StoryModel;
-using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,7 +8,8 @@ namespace BEComicWeb.Model.ImageModel
     {
         [Key]
         public string Id { get; set; }
-        public string ImagePath { get; set; }
+        [ForeignKey("ImageId")]
+        public Image ChapterImage { get; set; }
         public int Order { get; set; }
         [ForeignKey("ChapterId")]
         public Chapters? Chapter { get; set; }  

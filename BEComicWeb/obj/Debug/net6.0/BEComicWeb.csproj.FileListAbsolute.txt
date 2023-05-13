@@ -460,3 +460,12 @@ D:\PBL3\manga-server\BEComicWeb\obj\Debug\net6.0\scopedcss\bundle\BEComicWeb.sty
 D:\PBL3\manga-server\BEComicWeb\obj\Debug\net6.0\BEComicWeb.csproj.CopyComplete
 D:\PBL3\manga-server\BEComicWeb\obj\Debug\net6.0\BEComicWeb.genruntimeconfig.cache
 D:\PBL3\manga-server\BEComicWeb\obj\Debug\net6.0\ref\BEComicWeb.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\EntityFramework.SqlServer.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\EntityFramework.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\System.CodeDom.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\System.Data.SqlClient.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\runtimes\win-arm64\native\sni.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\runtimes\win-x64\native\sni.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\runtimes\win-x86\native\sni.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp2.1\System.Data.SqlClient.dll
+C:\Users\leatu\OneDrive - The University of Technology\Desktop\pbl3\manga-server\BEComicWeb\bin\Debug\net6.0\runtimes\win\lib\netcoreapp2.1\System.Data.SqlClient.dll
