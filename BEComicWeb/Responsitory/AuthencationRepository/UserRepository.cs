@@ -1,7 +1,6 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.AuthencationInterface;
 using BEComicWeb.Model.AuthencationModel;
-using BEComicWeb.Model.ImageModel;
 
 namespace BEComicWeb.Responsitory.AuthencationRepository
 {
@@ -19,7 +18,7 @@ namespace BEComicWeb.Responsitory.AuthencationRepository
             return res;
         }
 
-        public Image? getUserImage(string? id)
+        public string? getUserImage(string? id)
         {
             var res = _dbContext.Users.Find(id);
             if (res != null)
@@ -40,7 +39,7 @@ namespace BEComicWeb.Responsitory.AuthencationRepository
             return null;
         }
 
-        public Image? updateUserImage(string? user_id, Image new_image)
+        public string? updateUserImage(string? user_id, string new_image)
         {
             var res = _dbContext.Users.Find(user_id);
             if (res != null)

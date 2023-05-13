@@ -1,6 +1,4 @@
-﻿using BEComicWeb.Model.ImageModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BEComicWeb.Model.StoryModel
 {
@@ -11,8 +9,7 @@ namespace BEComicWeb.Model.StoryModel
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? Alias { get; set; }
-        [ForeignKey("ImageId")]
-        public Image? Image { get; set; }
+        public string? Image { get; set; }
         public string? Keyword { get; set; }
         public bool Status { get; set; }
         public DateTime? CreatedDate { get; set; }
@@ -22,7 +19,7 @@ namespace BEComicWeb.Model.StoryModel
         {
             Id = Guid.NewGuid().ToString();
         }
-        public Stories(string? id, string? name, string? description, string? alias, Image? image, string? keyword, bool status, DateTime? created, DateTime? lastModified)
+        public Stories(string? id, string? name, string? description, string? alias, string? image, string? keyword, bool status, DateTime? created, DateTime? lastModified)
         {
             Id = id;
             Name = name;

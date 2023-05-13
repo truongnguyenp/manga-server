@@ -8,13 +8,12 @@ namespace BEComicWeb.Model.ImageModel
     {
         [Key]
         public string Id { get; set; }
-        [ForeignKey("ImageId")]
-        public Image ChapterImage { get; set; }
+        public string FilePath { get; set; }
         public int Order { get; set; }
         [ForeignKey("ChapterId")]
-        public Chapters? Chapter { get; set; }  
+        public Chapters? Chapter { get; set; }
         public DateTime? CreatedDate { get; set; }
-        public DateTime? LastModifiedDate { get; set;}
+        public DateTime? LastModifiedDate { get; set; }
         public ChapterImages()
         {
             Id = Guid.NewGuid().ToString();

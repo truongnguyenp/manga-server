@@ -1,6 +1,4 @@
 ﻿using BEComicWeb.Model.AuthencationModel;
-using BEComicWeb.Model.ImageModel;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace BEComicWeb.Interface.AuthencationInterface
 {
@@ -10,7 +8,7 @@ namespace BEComicWeb.Interface.AuthencationInterface
         public List<Users>? getAllUsers();
         public UserInfo? getUserInfo(string? id);
         public UserInfo? updateUserInfo(UserInfo userinfo);
-        public Image? getUserImage(string? id);
-        public Image? updateUserImage(string? user_id, Image new_image);
+        public string? getUserImage(string? id);
+        public string? updateUserImage(string? user_id, string new_image);
     }
 }
