@@ -64,7 +64,7 @@ namespace BEComicWeb.Controllers
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status400BadRequest, new Response("Error",  "User already exists!"));
+                return StatusCode(StatusCodes.Status400BadRequest, new Response("Error", "User already exists!"));
 
             Users user = new()
             {
@@ -72,6 +72,10 @@ namespace BEComicWeb.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response("Error", "User creation failed! Please check user details and try again."));
+
             if (!await _roleManager.RoleExistsAsync(UserRoles.Reader))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Reader));
 
@@ -79,11 +83,6 @@ namespace BEComicWeb.Controllers
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.Reader);
             }
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response("Error", "User creation failed! Please check user details and try again."));
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Reader))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Reader));
             return Ok(new Response("Success", "User created successfully!"));
         }
 
@@ -101,6 +100,10 @@ namespace BEComicWeb.Controllers
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response("Error", "User creation failed! Please check user details and try again."));
+
             if (!await _roleManager.RoleExistsAsync(UserRoles.Translator))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Translator));
 
@@ -108,11 +111,6 @@ namespace BEComicWeb.Controllers
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.Translator);
             }
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response("Error", "User creation failed! Please check user details and try again."));
-            if (!await _roleManager.RoleExistsAsync(UserRoles.Translator))
-                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Translator));
             return Ok(new Response("Success", "User created successfully!"));
         }
 

@@ -7,7 +7,7 @@ namespace BEComicWeb.Responsitory.ImageRepository
     public class ChapterImagesRepository :  IChapterImagesRepository
     {
         AppDbContext _dbContext = new();
-        public List<string> DeleteChapterImages(string chapter_id)
+        public List<ChapterImages> DeleteChapterImages(string chapter_id)
         {
             var res = _dbContext.ChapterImagesDb.Where(e => e.Chapter.Id == chapter_id).ToList();
             if (res != null)
@@ -16,16 +16,16 @@ namespace BEComicWeb.Responsitory.ImageRepository
                 _dbContext.SaveChanges();
             }
 
-            return res.Select(e => e.ImagePath).ToList();
-        }
-
-        public List<string> GetChapterImages(string chapter_id)
-        {
-            var res = _dbContext.ChapterImagesDb.Where(e => e.Chapter.Id == chapter_id).Select(e => e.ImagePath).ToList();
             return res;
         }
 
-        public List<string> UpdateChapterImages(string chapter_id)
+        public List<ChapterImages> GetChapterImages(string chapter_id)
+        {
+            var res = _dbContext.ChapterImagesDb.Where(e => e.Chapter.Id == chapter_id).ToList();
+            return res;
+        }
+
+        public List<ChapterImages> UpdateChapterImages(string chapter_id)
         {
             var res = _dbContext.ChapterImagesDb.Where(e => e.Chapter.Id == chapter_id).ToList();
             if (res != null) 
@@ -34,7 +34,7 @@ namespace BEComicWeb.Responsitory.ImageRepository
                 _dbContext.SaveChanges();
             }
             
-            return res.Select(e => e.ImagePath).ToList();
+            return res;
         }
 
         public ChapterImages AddChapterImage(ChapterImages ChapterImage)

@@ -107,6 +107,35 @@ namespace BEComicWeb.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("BEComicWeb.Model.ImageModel.ChapterImages", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ChapterId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("LastModifiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChapterId");
+
+                    b.HasIndex("ImageId");
+
+                    b.ToTable("ChapterImagesDb");
+                });
+
             modelBuilder.Entity("BEComicWeb.Model.ImageModel.Image", b =>
                 {
                     b.Property<string>("Id")
@@ -442,6 +471,21 @@ namespace BEComicWeb.Migrations
                         .HasForeignKey("ImageId");
 
                     b.Navigation("UserImage");
+                });
+
+            modelBuilder.Entity("BEComicWeb.Model.ImageModel.ChapterImages", b =>
+                {
+                    b.HasOne("BEComicWeb.Model.StoryModel.Chapters", "Chapter")
+                        .WithMany()
+                        .HasForeignKey("ChapterId");
+
+                    b.HasOne("BEComicWeb.Model.ImageModel.Image", "ChapterImage")
+                        .WithMany()
+                        .HasForeignKey("ImageId");
+
+                    b.Navigation("Chapter");
+
+                    b.Navigation("ChapterImage");
                 });
 
             modelBuilder.Entity("BEComicWeb.Model.StoryModel.Chapters", b =>

@@ -17,14 +17,14 @@ namespace BEComicWeb.Controllers
             _IChapterImagesRepository = IStoryRes;
         }
         [HttpGet("{chapter_id}")]
-        public async Task<ActionResult<IEnumerable<string>>> Get(string chapter_id)
+        public async Task<ActionResult<IEnumerable<ChapterImages>>> Get(string chapter_id)
         {
-            var category = await Task.FromResult(_IChapterImagesRepository.GetChapterImages(chapter_id));
-            if (category == null)
+            var _ChapterImages = await Task.FromResult(_IChapterImagesRepository.GetChapterImages(chapter_id));
+            if (_ChapterImages == null)
             {
                 return NotFound();
             }
-            return category;
+            return _ChapterImages;
         }
 
         [HttpPost("add")]
@@ -35,7 +35,7 @@ namespace BEComicWeb.Controllers
         }
 
         [HttpDelete("delete/{chapter_id}")]
-        public async Task<ActionResult<IEnumerable<string>>> Delete(string? chapter_id)
+        public async Task<ActionResult<IEnumerable<ChapterImages>>> Delete(string? chapter_id)
         {
             return await Task.FromResult(_IChapterImagesRepository.DeleteChapterImages(chapter_id));
         }
