@@ -7747,19 +7747,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Truong Nguyen\\.nuget\\packages\\": {}
+    "C:\\Users\\leatu\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PBL3\\manga-server\\BEComicWeb\\BEComicWeb.csproj",
+      "projectUniqueName": "C:\\Users\\leatu\\OneDrive - The University of Technology\\Desktop\\pbl3\\manga-server\\BEComicWeb\\BEComicWeb.csproj",
       "projectName": "BEComicWeb",
-      "projectPath": "D:\\PBL3\\manga-server\\BEComicWeb\\BEComicWeb.csproj",
-      "packagesPath": "C:\\Users\\Truong Nguyen\\.nuget\\packages\\",
-      "outputPath": "D:\\PBL3\\manga-server\\BEComicWeb\\obj\\",
+      "projectPath": "C:\\Users\\leatu\\OneDrive - The University of Technology\\Desktop\\pbl3\\manga-server\\BEComicWeb\\BEComicWeb.csproj",
+      "packagesPath": "C:\\Users\\leatu\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\leatu\\OneDrive - The University of Technology\\Desktop\\pbl3\\manga-server\\BEComicWeb\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "C:\\Users\\Truong Nguyen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\leatu\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -7839,7 +7844,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
       }
     }
   }
