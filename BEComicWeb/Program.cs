@@ -1,8 +1,15 @@
+using BEComicWeb.Data;
+using BEComicWeb.Interface.ImageInterface;
+using BEComicWeb.Interface.StoryInterface;
+using BEComicWeb.Model.AuthencationModel;
+using BEComicWeb.Repository.ImageRepository;
+using BEComicWeb.Repository.StoryRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+<<<<<<< HEAD
 using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.StoryModel;
@@ -10,6 +17,8 @@ using BEComicWeb.Repository.StoryRepository;
 using BEComicWeb.Interface.ImageInterface;
 using BEComicWeb.Repository.ImageRepository;
 using BEComicWeb.Model.AuthencationModel;
+=======
+>>>>>>> d9fee152943ab10471f05c90410489af28f1fd70
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigurationManager configuration = builder.Configuration;

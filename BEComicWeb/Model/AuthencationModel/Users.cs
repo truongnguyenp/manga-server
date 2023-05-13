@@ -1,6 +1,5 @@
 ﻿using BEComicWeb.Model.ImageModel;
 using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEComicWeb.Model.AuthencationModel
