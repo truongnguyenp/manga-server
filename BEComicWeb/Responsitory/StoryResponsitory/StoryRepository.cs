@@ -37,7 +37,7 @@ namespace BEComicWeb.Repository.StoryRepository
             if (story != null)
             {
                 var chapters = from chapter in _dbContext.ChaptersDb
-                               where chapter.Story.Id == id
+                               where chapter.StoryId == id
                                select chapter;
                 _dbContext.ChaptersDb.RemoveRange(chapters.ToList());
                 _dbContext.StoriesDb.Remove(story);
@@ -93,7 +93,7 @@ namespace BEComicWeb.Repository.StoryRepository
 
         public List<Chapters> GetAllChaptersOfStory(string story_id)
         {
-            var res = _dbContext.ChaptersDb.Where(e => e.Story.Id == story_id).ToList();
+            var res = _dbContext.ChaptersDb.Where(e => e.StoryId == story_id).ToList();
             return res;
         }
     }

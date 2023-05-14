@@ -1,10 +1,7 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.StoryModel;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace BEComicWeb.Repository.StoryRepository
 {
@@ -14,9 +11,9 @@ namespace BEComicWeb.Repository.StoryRepository
 
         public Chapters AddChapter(Chapters chapter)
         {
-            if (chapter != null && chapter.Story.Id != null)
+            if (chapter != null && chapter.StoryId != null)
             {
-                var story = _dbContext.StoriesDb.Find(chapter.Story.Id);
+                var story = _dbContext.StoriesDb.Find(chapter.StoryId);
                 if (story == null)
                 {
                     return null;
@@ -57,7 +54,7 @@ namespace BEComicWeb.Repository.StoryRepository
         }
         public Chapters? GetNewestChapterOfStory(string story_id)
         {
-            var res = _dbContext.ChaptersDb.Where(e => e.Story.Id == story_id)
+            var res = _dbContext.ChaptersDb.Where(e => e.StoryId == story_id)
                                            .OrderByDescending(e => e.LastModified)
                                            .First();
             return res;
@@ -66,9 +63,10 @@ namespace BEComicWeb.Repository.StoryRepository
         {
             if (chapter != null)
             {
-                var old = _dbContext.ChaptersDb.Find(chapter.Id);
+                var old = _dbContext.ChaptersDb.FirstOrDefault(e => e.Id == chapter.Id);
                 if (old != null)
                 {
+                    _dbContext.Entry(old).State = EntityState.Detached;
                     _dbContext.ChaptersDb.Update(chapter);
                     _dbContext.SaveChanges();
                     return chapter;
