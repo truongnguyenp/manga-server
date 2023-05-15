@@ -1,8 +1,6 @@
 ﻿using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.StoryModel;
-using BEComicWeb.Repository.StoryRepository;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BEComicWeb.Controllers
 {
@@ -11,6 +9,7 @@ namespace BEComicWeb.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoriesRepository _ICategoriesRepository;
+
 
         public CategoryController(ICategoriesRepository IStoryRes)
         {
