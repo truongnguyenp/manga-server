@@ -4,6 +4,7 @@ using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.AuthencationModel;
 using BEComicWeb.Repository.ImageRepository;
 using BEComicWeb.Repository.StoryRepository;
+using BEComicWeb.Responsitory.ImageRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -28,9 +29,8 @@ builder.Services.AddIdentity<Users, IdentityRole>()
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IStoryRepository, StoryRepository>();
 builder.Services.AddScoped<IChapterRepository, ChapterRepository>();
-builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 builder.Services.AddScoped<IImageRepository, ImageRepository>();
-
+builder.Services.AddScoped<IChapterImagesRepository, ChapterImagesRepository>();
 // Adding Authentication
 builder.Services.AddAuthentication(options =>
 {

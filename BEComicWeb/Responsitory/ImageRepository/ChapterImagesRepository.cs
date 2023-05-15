@@ -4,12 +4,12 @@ using BEComicWeb.Model.ImageModel;
 
 namespace BEComicWeb.Responsitory.ImageRepository
 {
-    public class ChapterImagesRepository :  IChapterImagesRepository
+    public class ChapterImagesRepository : IChapterImagesRepository
     {
         AppDbContext _dbContext = new();
         public List<ChapterImages> DeleteChapterImages(string chapter_id)
         {
-            var res = _dbContext.ChapterImagesDb.Where(e => e.Chapter.Id == chapter_id).ToList();
+            var res = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == chapter_id).ToList();
             if (res != null)
             {
                 _dbContext.ChapterImagesDb.RemoveRange(res);
@@ -21,19 +21,19 @@ namespace BEComicWeb.Responsitory.ImageRepository
 
         public List<ChapterImages> GetChapterImages(string chapter_id)
         {
-            var res = _dbContext.ChapterImagesDb.Where(e => e.Chapter.Id == chapter_id).ToList();
+            var res = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == chapter_id).ToList();
             return res;
         }
 
         public List<ChapterImages> UpdateChapterImages(string chapter_id)
         {
-            var res = _dbContext.ChapterImagesDb.Where(e => e.Chapter.Id == chapter_id).ToList();
-            if (res != null) 
+            var res = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == chapter_id).ToList();
+            if (res != null)
             {
                 _dbContext.ChapterImagesDb.RemoveRange(res);
                 _dbContext.SaveChanges();
             }
-            
+
             return res;
         }
 

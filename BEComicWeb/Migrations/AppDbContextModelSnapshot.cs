@@ -111,24 +111,17 @@ namespace BEComicWeb.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ChapterId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("FilePath")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("LastModifiedDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Order")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChapterId");
 
                     b.ToTable("ChapterImagesDb");
                 });
@@ -210,14 +203,13 @@ namespace BEComicWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StoryId")
-                        .HasColumnType("nvarchar(450)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Views")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("StoryId");
 
                     b.ToTable("ChaptersDb");
                 });
@@ -441,24 +433,6 @@ namespace BEComicWeb.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("BEComicWeb.Model.ImageModel.ChapterImages", b =>
-                {
-                    b.HasOne("BEComicWeb.Model.StoryModel.Chapters", "Chapter")
-                        .WithMany()
-                        .HasForeignKey("ChapterId");
-
-                    b.Navigation("Chapter");
-                });
-
-            modelBuilder.Entity("BEComicWeb.Model.StoryModel.Chapters", b =>
-                {
-                    b.HasOne("BEComicWeb.Model.StoryModel.Stories", "Story")
-                        .WithMany()
-                        .HasForeignKey("StoryId");
-
-                    b.Navigation("Story");
                 });
 
             modelBuilder.Entity("BEComicWeb.Model.StoryModel.StoryAuthor", b =>

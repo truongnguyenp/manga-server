@@ -1,9 +1,5 @@
-﻿using BEComicWeb.Model.Vultr;   
-using BEComicWeb.Interface.Vultr;
+﻿using BEComicWeb.Interface.ImageInterface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using Vultr.API;
-using BEComicWeb.Interface.ImageInterface;
 
 namespace BEComicWeb.Controllers
 {
@@ -20,17 +16,17 @@ namespace BEComicWeb.Controllers
         {
             _imageRespository = imageRespository;
         }
-        
+
         [HttpPost("upload")]
         public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] string storage)
         {
             /* var imageId = await _vultrRepository.UploadImageAsync(file, imageName);*/
-            var imageId = await _imageRespository.UploadImageAsync(file, storage);
-            return Ok(new { ImageId = imageId });
+            var imagePath = await _imageRespository.UploadImageAsync(file, storage);
+            return Ok(new { ImagePath = imagePath });
         }
 
         [HttpGet("{imageId}")]
-        public async Task<IActionResult> GetImage(string imageId)   
+        public async Task<IActionResult> GetImage(string imageId)
         {
             var stream = await _imageRespository.GetImageAsync(imageId);
 

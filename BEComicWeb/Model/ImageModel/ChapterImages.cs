@@ -1,6 +1,4 @@
-﻿using BEComicWeb.Model.StoryModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace BEComicWeb.Model.ImageModel
 {
@@ -8,12 +6,10 @@ namespace BEComicWeb.Model.ImageModel
     {
         [Key]
         public string Id { get; set; }
-        public string FilePath { get; set; }
+        public string ImagePath { get; set; }
         public int Order { get; set; }
-        [ForeignKey("ChapterId")]
-        public Chapters? Chapter { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public DateTime? LastModifiedDate { get; set; }
+
+        public string ChapterId { get; set; }
         public ChapterImages()
         {
             Id = Guid.NewGuid().ToString();
