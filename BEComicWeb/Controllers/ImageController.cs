@@ -18,10 +18,10 @@ namespace BEComicWeb.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] string storage)
+        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] string story_id, [FromForm] string chapter_id)
         {
             /* var imageId = await _vultrRepository.UploadImageAsync(file, imageName);*/
-            var imagePath = await _imageRespository.UploadImageAsync(file, storage);
+            var imagePath = await _imageRespository.UploadImageAsync(file, story_id, chapter_id);
             return Ok(new { ImagePath = imagePath });
         }
 

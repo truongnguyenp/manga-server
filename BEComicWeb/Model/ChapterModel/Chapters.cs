@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BEComicWeb.Model.StoryModel
+namespace BEComicWeb.Model.ChapterModel
 {
     public class Chapters
     {
         [Key]
         public string? Id { get; set; }
-
         public string StoryId { get; set; }
         public int? ChapterNumber { get; set; }
         public string? Name { get; set; }

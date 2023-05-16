@@ -1,78 +1,103 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
-using BEComicWeb.Model.StoryModel;
-using Microsoft.EntityFrameworkCore;
+using BEComicWeb.Model.ChapterModel;
 
-namespace BEComicWeb.Repository.StoryRepository
+namespace BEComicWeb.Responsitory.StoryResponsitory
 {
     public class ChapterRepository : IChapterRepository
     {
-        readonly AppDbContext _dbContext = new();
-
-        public Chapters AddChapter(Chapters chapter)
+        private readonly AppDbContext _dbContext = new();
+        public ChapterData CreateNewChapter(ChapterData? chapterData)
         {
-            if (chapter != null && chapter.StoryId != null)
-            {
-                var story = _dbContext.StoriesDb.Find(chapter.StoryId);
-                if (story == null)
-                {
-                    return null;
-                }
-                story.LastModified = DateTime.Now;
-                _dbContext.ChaptersDb.Add(chapter);
-                _dbContext.SaveChanges();
-                return chapter;
-            }
-            return null;
-        }
-
-        public bool CheckChapterExists(string id)
-        {
-            Chapters chapter = _dbContext.ChaptersDb.Find(id);
-            return chapter != null;
-        }
-
-        public Chapters? DeleteChapter(string? id)
-        {
-            Chapters? chapter = _dbContext.ChaptersDb?.Find(id);
-            if (chapter != null)
-            {
-                _dbContext.ChaptersDb?.Remove(chapter);
-                _dbContext.SaveChanges();
-            }
-            return chapter;
-        }
-
-        public Chapters? GetChapter(string? chapter_id)
-        {
-            if (chapter_id == null)
+            if (chapterData == null || chapterData.Chapter == null || chapterData.ChapterImagesList == null)
             {
                 return null;
             }
-            var res = _dbContext.ChaptersDb?.Find(chapter_id);
-            return res;
-        }
-        public Chapters? GetNewestChapterOfStory(string story_id)
-        {
-            var res = _dbContext.ChaptersDb.Where(e => e.StoryId == story_id)
-                                           .OrderByDescending(e => e.LastModified)
-                                           .First();
-            return res;
-        }
-        public Chapters? UpdateChapter(Chapters chapter)
-        {
-            if (chapter != null)
+            if (!IsChapterExists(chapterData.Chapter))
             {
-                var old = _dbContext.ChaptersDb.FirstOrDefault(e => e.Id == chapter.Id);
-                if (old != null)
-                {
-                    _dbContext.Entry(old).State = EntityState.Detached;
-                    _dbContext.ChaptersDb.Update(chapter);
-                    _dbContext.SaveChanges();
-                    return chapter;
-                }
+                _dbContext.ChaptersDb.Add(chapterData.Chapter);
+                _dbContext.ChapterImagesDb.AddRange(chapterData.ChapterImagesList);
+                _dbContext.SaveChanges();
+                return chapterData;
             }
             return null;
+        }
+
+        public ChapterData UpdateChapter(ChapterData chapterData)
+        {
+            if (chapterData == null || chapterData.Chapter == null || chapterData.ChapterImagesList == null)
+            {
+                return null;
+            }
+            if (IsChapterExists(chapterData.Chapter))
+            {
+                _dbContext.ChaptersDb.Update(chapterData.Chapter);
+                foreach (var chapterImage in chapterData.ChapterImagesList)
+                {
+                    if (!IsChapterImageExists(chapterImage))
+                    {
+                        _dbContext.ChapterImagesDb.Add(chapterImage);
+                    }
+                    else
+                    {
+                        _dbContext.ChapterImagesDb.Update(chapterImage);
+                    }
+                }
+                _dbContext.ChapterImagesDb.RemoveRange(_dbContext.ChapterImagesDb.Where(e => e.Order > chapterData.ChapterImagesList.Count));
+                _dbContext.SaveChanges();
+                return chapterData;
+            }
+            return null;
+        }
+        public ChapterData DeleteChapter(string id)
+        {
+            ChapterData result = new();
+            result.Chapter = _dbContext.ChaptersDb.FirstOrDefault(e => e.Id == id);
+            if (result.Chapter != null)
+            {
+                _dbContext.ChaptersDb.Remove(result.Chapter);
+                result.ChapterImagesList = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == id).ToList();
+                _dbContext.ChapterImagesDb.RemoveRange(result.ChapterImagesList);
+                _dbContext.SaveChanges();
+                return result;
+            }
+            return null;
+        }
+        public ChapterData GetChapter(string id)
+        {
+            ChapterData result = new();
+            result.Chapter = _dbContext.ChaptersDb.FirstOrDefault(e => e.Id == id);
+            if (result.Chapter != null)
+            {
+                result.ChapterImagesList = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == id).ToList();
+                return result;
+            }
+            return null;
+        }
+        public Chapters GetNewestChapterOfStory(string story_id)
+        {
+            if (story_id == null)
+                return null;
+            Chapters result = new();
+            result = _dbContext.ChaptersDb.Where(e => e.StoryId == story_id).OrderByDescending(e => e.LastModified).FirstOrDefault();
+            return result;
+        }
+
+        public List<Chapters> GetAllChaptersOfStory(string story_id)
+        {
+            if (story_id == null)
+                return null;
+            return _dbContext.ChaptersDb.Where(e => e.StoryId == story_id).OrderByDescending(e => e.LastModified).ToList();
+        }
+
+        public bool IsChapterExists(Chapters? chapter)
+        {
+            return _dbContext.ChaptersDb.FirstOrDefault(e => e.StoryId == chapter.StoryId && e.ChapterNumber == chapter.ChapterNumber) != null;
+        }
+
+        public bool IsChapterImageExists(ChapterImages? chapterImage)
+        {
+            return _dbContext.ChapterImagesDb.FirstOrDefault(e => e.ChapterId == chapterImage.ChapterId && e.ImagePath == chapterImage.ImagePath) != null;
         }
     }
 }

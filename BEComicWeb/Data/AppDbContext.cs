@@ -1,6 +1,5 @@
-﻿using BEComicWeb.Model;
-using BEComicWeb.Model.AuthencationModel;
-using BEComicWeb.Model.ImageModel;
+﻿using BEComicWeb.Model.AuthencationModel;
+using BEComicWeb.Model.ChapterModel;
 using BEComicWeb.Model.StoryModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

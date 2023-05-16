@@ -14,12 +14,14 @@ namespace BEComicWeb.Repository.ImageRepository
             _environment = env;
         }
 
-        public async Task<string> UploadImageAsync([FromForm] IFormFile file, string storage)
+        public async Task<string> UploadImageAsync([FromForm] IFormFile file, string story_id, string chapter_id)
         {
-            var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", storage);
+            var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", story_id, chapter_id);
             string file_name;
-            if (file.FileName == null) file_name = Guid.NewGuid().ToString();
-            else file_name = Path.GetFileNameWithoutExtension(file.FileName) + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            if (file.FileName == null) 
+                file_name = Guid.NewGuid().ToString();
+            else 
+                file_name = Path.GetFileNameWithoutExtension(file.FileName) + Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             var filepath = Path.Combine(folder_path, file_name);
             if (!Directory.Exists(folder_path))
             {
@@ -30,7 +32,7 @@ namespace BEComicWeb.Repository.ImageRepository
                 await file.CopyToAsync(fileStream);
             }
 
-            string imageUrl = $"http://localhost:5000/Data/ImageStorage/{storage}/{file_name}";
+            string imageUrl = $"http://localhost:5000/Data/ImageStorage/{story_id}/{chapter_id}/{file_name}";
             return imageUrl;
         }
 

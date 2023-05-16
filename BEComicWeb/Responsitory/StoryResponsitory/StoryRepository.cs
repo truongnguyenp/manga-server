@@ -1,13 +1,15 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
+using BEComicWeb.Model.ChapterModel;
 using BEComicWeb.Model.StoryModel;
-
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace BEComicWeb.Repository.StoryRepository
 {
     public class StoryRepository : IStoryRepository
     {
         readonly AppDbContext? _dbContext = new();
+        private readonly IHostingEnvironment _environment;
         public Stories AddStory(Stories? story)
         {
             if (story == null)
@@ -18,6 +20,8 @@ namespace BEComicWeb.Repository.StoryRepository
             story.LastModified = DateTime.Now;
             _dbContext.StoriesDb.Add(story);
             _dbContext.SaveChanges();
+            var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", story.Id);
+            Directory.CreateDirectory(folder_path);
             return story;
         }
 
@@ -36,11 +40,10 @@ namespace BEComicWeb.Repository.StoryRepository
             Stories? story = _dbContext.StoriesDb.Find(id);
             if (story != null)
             {
-                var chapters = from chapter in _dbContext.ChaptersDb
-                               where chapter.StoryId == id
-                               select chapter;
-                _dbContext.ChaptersDb.RemoveRange(chapters.ToList());
+                _dbContext.ChaptersDb.RemoveRange(_dbContext.ChaptersDb.Where(e => e.StoryId == id).ToList());
                 _dbContext.StoriesDb.Remove(story);
+                var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", story.Id);
+                Directory.Delete(folder_path);
                 _dbContext.SaveChanges();
             }
             return story;

@@ -1,4 +1,5 @@
 ﻿using BEComicWeb.Model.AuthencationModel;
+using BEComicWeb.Model.ChapterModel;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 

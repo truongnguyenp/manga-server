@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BEComicWeb.Model.ImageModel
+namespace BEComicWeb.Model.ChapterModel
 {
     public class ChapterImages
     {

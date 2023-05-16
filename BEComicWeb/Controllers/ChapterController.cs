@@ -1,8 +1,6 @@
-﻿using BEComicWeb.Interface.ImageInterface;
-using BEComicWeb.Interface.StoryInterface;
-using BEComicWeb.Model;
-using BEComicWeb.Model.ImageModel;
-using BEComicWeb.Model.StoryModel;
+﻿using BEComicWeb.Interface.StoryInterface;
+using BEComicWeb.Model.ChapterModel;
+using BEComicWeb.Responsitory.StoryResponsitory;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,13 +11,10 @@ namespace BEComicWeb.Controllers
     public class ChapterController : Controller
     {
         private readonly IChapterRepository _IChapterRepository;
-        private readonly IChapterImagesRepository _IChapterImagesRepository;
 
-        public ChapterController(IChapterRepository IChapterRes, IChapterImagesRepository IChapterImageRep)
+        public ChapterController(IChapterRepository IChapterRep)
         {
-            _IChapterRepository = IChapterRes;
-            _IChapterImagesRepository = IChapterImageRep;
-
+            _IChapterRepository = IChapterRep;
         }
 
         [HttpGet("{story_id}/newest-chapter")]
@@ -28,77 +23,58 @@ namespace BEComicWeb.Controllers
             return await Task.FromResult(_IChapterRepository.GetNewestChapterOfStory(story_id));
         }
 
+        [HttpGet("{story_id}/all-chapters")]
+        public async Task<ActionResult<IEnumerable<Chapters>>> GetAllChaptersOfStory(string story_id)
+        {
+            return await Task.FromResult(_IChapterRepository.GetAllChaptersOfStory(story_id));
+        }
+
 
         // Get Chapter by Id
         // GET Chapter/{id}
         [HttpGet("{id}")]
-        public async Task<ActionResult<object>> Get(string id)
+        public async Task<ActionResult<ChapterData>> GetChapter(string id)
         {
-            var Chapter = await Task.FromResult(_IChapterRepository.GetChapter(id));
-            if (Chapter == null)
+            var chapterData = await Task.FromResult(_IChapterRepository.GetChapter(id));
+            if (chapterData == null)
             {
                 return NotFound();
             }
-            var ChapterImages = _IChapterImagesRepository.GetChapterImages(id);
-            return new { Chapter, ChapterImages };
+            return chapterData;
         }
 
         // Create new Chapter
         // POST Chapter
         [HttpPost("new")]
-        public async Task<ActionResult<Chapters>> Post(ChapterData chapterData)
+        public async Task<ActionResult<ChapterData>> Post(ChapterData chapterData)
         {
-            Chapters chapter = chapterData.Chapter;
-            List<ChapterImages> chapterImages = chapterData.ChapterImages;
-            foreach (var chapterImage in chapterImages)
-            {
-
-                _IChapterImagesRepository.AddChapterImage(chapterImage);
-
-            }
-            return await Task.FromResult(_IChapterRepository.AddChapter(chapter));
+            var data = await Task.FromResult(_IChapterRepository.UpdateChapter(chapterData));
+            return await Task.FromResult(data);
         }
 
         // Update Chapter if this Chapter is existed.
 
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<Chapters>> Put(string id, ChapterData chapterData)
+        public async Task<ActionResult<ChapterData>> Put(ChapterData chapterData)
         {
-            Chapters chapter = chapterData.Chapter;
-            List<ChapterImages> chapterImages = chapterData.ChapterImages;
-            if (id != chapter.Id)
-            {
-                return BadRequest();
-            }
             try
             {
 
-                _IChapterRepository.UpdateChapter(chapter);
+                _IChapterRepository.UpdateChapter(chapterData);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ChapterExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
-            return await Task.FromResult(chapter);
+            return await Task.FromResult(chapterData);
         }
 
         // Delete Chapter
         [HttpDelete("delete/{id}")]
-        public async Task<ActionResult<Chapters>> Delete(string id)
+        public async Task<ActionResult<ChapterData>> Delete(string id)
         {
             var Chapter = _IChapterRepository.DeleteChapter(id);
             return await Task.FromResult(Chapter);
-        }
-        private bool ChapterExists(string id)
-        {
-            return _IChapterRepository.CheckChapterExists(id);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using BEComicWeb.Model.StoryModel;
+﻿using BEComicWeb.Model.ChapterModel;
+using BEComicWeb.Model.StoryModel;
 
 namespace BEComicWeb.Interface.StoryInterface
 {
