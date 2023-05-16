@@ -1,4 +1,5 @@
-﻿using BEComicWeb.Model.AuthencationModel;
+﻿using BEComicWeb.Model;
+using BEComicWeb.Model.AuthencationModel;
 using BEComicWeb.Model.ImageModel;
 using BEComicWeb.Model.StoryModel;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -27,6 +28,7 @@ namespace BEComicWeb.Data
 
             base.OnModelCreating(builder);
             builder.Ignore<UserInfo>();
+            builder.Ignore<ChapterData>();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

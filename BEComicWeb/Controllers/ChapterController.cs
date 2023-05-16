@@ -62,15 +62,18 @@ namespace BEComicWeb.Controllers
         // Update Chapter if this Chapter is existed.
 
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<Chapters>> Put(string id, Chapters Chapter)
+        public async Task<ActionResult<Chapters>> Put(string id, ChapterData chapterData)
         {
-            if (id != Chapter.Id)
+            Chapters chapter = chapterData.Chapter;
+            List<ChapterImages> chapterImages = chapterData.ChapterImages;
+            if (id != chapter.Id)
             {
                 return BadRequest();
             }
             try
             {
-                _IChapterRepository.UpdateChapter(Chapter);
+
+                _IChapterRepository.UpdateChapter(chapter);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,7 +86,7 @@ namespace BEComicWeb.Controllers
                     throw;
                 }
             }
-            return await Task.FromResult(Chapter);
+            return await Task.FromResult(chapter);
         }
 
         // Delete Chapter

@@ -6,7 +6,7 @@ namespace BEComicWeb.Interface.ImageInterface
     {
         public List<ChapterImages> GetChapterImages(string chapter_id);
         public List<ChapterImages> DeleteChapterImages(string chapter_id);
-        public List<ChapterImages> UpdateChapterImages(string chapter_id);
+        public Task<List<ChapterImages>> UpdateChapterImages(string chapter_id, List<ChapterImages> chapterImages);
         public ChapterImages AddChapterImage(ChapterImages ChapterImage);
     }
 }
