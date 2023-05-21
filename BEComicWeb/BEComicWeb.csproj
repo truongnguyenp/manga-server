@@ -30,7 +30,6 @@
   <ItemGroup>
     <Folder Include="Data\ImageStorage\" />
     <Folder Include="Data\ImageStorage\neural_network\" />
-    <Folder Include="Model\ImageModel\" />
   </ItemGroup>
 
 </Project>

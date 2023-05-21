@@ -1,5 +1,4 @@
-﻿using BEComicWeb.Model.ImageModel;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace BEComicWeb.Model.AuthencationModel

@@ -10,6 +10,10 @@ namespace BEComicWeb.Repository.StoryRepository
     {
         readonly AppDbContext? _dbContext = new();
         private readonly IHostingEnvironment _environment;
+        public StoryRepository(IHostingEnvironment env)
+        {
+            _environment = env;
+        }
         public Stories AddStory(Stories? story)
         {
             if (story == null)
