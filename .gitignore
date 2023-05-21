@@ -45,3 +45,14 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 *.userprefs
+BEComicWeb/BEComicWeb.csproj
+BEComicWeb/bin/
+BEComicWeb/obj/
+.vs/BEComicWeb/v17/.suo
+*.suo
+bin/*
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Custom for Visual Studio
+*.cs diff=csharp
