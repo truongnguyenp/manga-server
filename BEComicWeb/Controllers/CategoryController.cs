@@ -36,10 +36,14 @@ namespace BEComicWeb.Controllers
         }
 
         [HttpGet("/{category_id}/stories")]
+        public async Task<ActionResult<IEnumerable<StoryData>>> getStoriesOfCategory(string category_id, int page, int n_stories)
+        {
+            return await Task.FromResult(_ICategoriesRepository.getStoriesOfCategory(category_id, page, n_stories));
+        }
+        [HttpGet("/{category_id}/stories/size")]
         public async Task<ActionResult<int>> getStoriesOfCategorySize(string category_id)
         {
-            var n_pages = await Task.FromResult(_ICategoriesRepository.getStoriesOfCategorySize(category_id));
-            return n_pages;
+            return await Task.FromResult(_ICategoriesRepository.getStoriesOfCategorySize(category_id));
         }
 
         // Create new Story

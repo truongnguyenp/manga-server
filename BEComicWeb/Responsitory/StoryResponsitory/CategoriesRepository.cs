@@ -57,7 +57,9 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
                 {
                     StoryData? storyData = new StoryData()
                     {
-                        Story = story
+                        Story = story,
+                        StoryCategoryList = new List<Categories>(),
+                        StoryAuthorList = new List<Authors>()
                     };
                     foreach (var storyCate in _dbContext.StoryCategoriesDb.Where(e => e.StoryId == story.Id))
                     {

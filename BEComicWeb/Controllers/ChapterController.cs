@@ -18,7 +18,7 @@ namespace BEComicWeb.Controllers
         }
 
         [HttpGet("{story_id}/newest-chapter")]
-        public async Task<ActionResult<Chapters>> GetNewestChapterOfStory(string story_id)
+        public async Task<ActionResult<Chapters>> GetNewestChapterOfStory(string story_id)  
         {
             return await Task.FromResult(_IChapterRepository.GetNewestChapterOfStory(story_id));
         }
