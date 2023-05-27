@@ -9,7 +9,7 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
         AppDbContext _dbContext = new();
         public StoryCategories? addStoryCategory(StoryCategories? story_cate)
         {
-            if (story_cate.Story == null || story_cate.Category == null)
+            if (story_cate.StoryId == null || story_cate.CategoryId == null)
             {
                 return null;
             }
@@ -24,18 +24,6 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             _dbContext.StoryCategoriesDb.Remove(story_cate);
             _dbContext.SaveChanges();
             return story_cate;
-        }
-        public List<StoryCategories>? getStoryCategories(Stories? story)
-        {
-            if (story == null)
-            {
-                return null;
-            }
-            var story_categories = from story_cate in _dbContext.StoryCategoriesDb
-                                   where story_cate.Story.Id == story.Id
-                                   select story_cate;
-            List<StoryCategories>? result = story_categories.ToList();
-            return result;
         }
     }
 }

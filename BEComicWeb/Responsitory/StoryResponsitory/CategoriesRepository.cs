@@ -1,7 +1,6 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.StoryModel;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BEComicWeb.Responsitory.StoryResponsitory
 {
@@ -12,7 +11,7 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
         {
             if (category != null)
             {
-                _dbContext.Add(category);
+                _dbContext.CategoriesDb.Add(category);
                 _dbContext.SaveChanges();
             }
             return category;
@@ -41,16 +40,36 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             return category;
         }
 
-        public List<Stories>? getStoriesOfCategory(string? category_id, int page, int n_stories)
+        public List<StoryData>? getStoriesOfCategory(string? category_id, int page, int n_stories)
         {
             Categories? category = _dbContext.CategoriesDb.Find(category_id);
             if (category != null)
             {
-                var stories = from story in _dbContext.StoriesDb
-                              join story_cate in _dbContext.StoryCategoriesDb on story.Id equals story_cate.Story.Id
-                              where story_cate.Category.Id == category.Id
-                              select story;
-                return stories.Skip(n_stories*(page - 1)).Take(n_stories).ToList();
+                var storyIdList = _dbContext.StoryCategoriesDb.Where(e => e.CategoryId == category_id).Select(e=> e.StoryId).ToList();
+                List<StoryData> res = new List<StoryData>();
+                List<Stories> storyList = _dbContext.StoriesDb.Where(e => storyIdList.Contains(e.Id))
+                                                              .OrderByDescending(e => e.LastModified)
+                                                              .Skip((page - 1) * n_stories)
+                                                              .Take(n_stories)
+                                                              .ToList();
+                                                        
+                foreach (var story in storyList)
+                {
+                    StoryData? storyData = new StoryData()
+                    {
+                        Story = story
+                    };
+                    foreach (var storyCate in _dbContext.StoryCategoriesDb.Where(e => e.StoryId == story.Id))
+                    {
+                        storyData.StoryCategoryList.Add(_dbContext.CategoriesDb.FirstOrDefault(e => e.Id == storyCate.CategoryId));
+                    }
+                    foreach (var storyAuthor in _dbContext.StoryAuthorsDb.Where(e => e.StoryId == story.Id))
+                    {
+                        storyData.StoryAuthorList.Add(_dbContext.AuthorsDb.FirstOrDefault(e => e.Id == storyAuthor.AuthorId));
+                    }
+                    res.Add(storyData);
+                }
+                return res;
             }
             return null;
         }
@@ -59,27 +78,11 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             Categories? category = _dbContext.CategoriesDb.Find(category_id);
             if (category != null)
             {
-                var stories = from story in _dbContext.StoriesDb
-                              join story_cate in _dbContext.StoryCategoriesDb on story.Id equals story_cate.Story.Id
-                              where story_cate.Category.Id == category.Id
-                              select story;
-                return stories.Count();
+                var storyIdList = _dbContext.StoryCategoriesDb.Where(e => e.CategoryId == category_id).Select(e => e.StoryId).ToList();
+                List<Stories> storyList = _dbContext.StoriesDb.Where(e => storyIdList.Contains(e.Id)).ToList();
+                return storyList.Count();
             }
             return 0;
-        }
-
-        public List<Stories>? searchStoriesByCategory(string? category_name)
-        {
-            Categories? category = _dbContext.CategoriesDb.Find(category_name);
-            if (category != null)
-            {
-                var stories = from story in _dbContext.StoriesDb
-                              join story_cate in _dbContext.StoryCategoriesDb on story.Id equals story_cate.Story.Id
-                              where story_cate.Category.Name.Contains(category.Name)
-                              select story;
-                return stories.ToList();
-            }
-            return null;
         }
 
         public Categories updateCategory(Categories category)

@@ -11,23 +11,15 @@ namespace BEComicWeb.Controllers
         private readonly ICategoriesRepository _ICategoriesRepository;
 
 
-        public CategoryController(ICategoriesRepository IStoryRes)
+        public CategoryController(ICategoriesRepository ICategoriesRepo)
         {
-            _ICategoriesRepository = IStoryRes;
+            _ICategoriesRepository = ICategoriesRepo;
         }
 
         [HttpGet("all")]
         public async Task<ActionResult<IEnumerable<Categories>>> Get()
         {
             return await Task.FromResult(_ICategoriesRepository.getAll());
-        }
-
-        // Get List of newest Categories.
-        // GET: search/{page}
-        [HttpGet("search/{search_string}")]
-        public async Task<ActionResult<IEnumerable<Stories>>> searchStoriesByCategory(string search_string)
-        {
-            return await Task.FromResult(_ICategoriesRepository.searchStoriesByCategory(search_string));
         }
 
         // Get Story by Id
@@ -53,10 +45,9 @@ namespace BEComicWeb.Controllers
         // Create new Story
         // POST story
         [HttpPost("new")]
-        public async Task<ActionResult<Categories>> Post(Categories Story)
+        public async Task<ActionResult<Categories>> Post(Categories category)
         {
-            _ICategoriesRepository.addNew(Story);
-            return await Task.FromResult(Story);
+            return await Task.FromResult(_ICategoriesRepository.addNew(category));
         }
 
         // Update Story if this story is existed.

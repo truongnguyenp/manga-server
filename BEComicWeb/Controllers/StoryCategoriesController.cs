@@ -14,11 +14,11 @@ namespace BEComicWeb.Controllers
         {
             _IStoryCategoriesRepository = _IStoryCategoriesRepos;
         }
-        [HttpGet("list")]
+        /*[HttpGet("list")]
         public async Task<ActionResult<IEnumerable<StoryCategories>>> Get(Stories? story)
         {
             return await Task.FromResult(_IStoryCategoriesRepository.getStoryCategories(story));
-        }
+        }*/
         [HttpPost("add")]
         public async Task<ActionResult<StoryCategories>> Post(StoryCategories? story_cate)
         {

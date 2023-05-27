@@ -1,17 +1,17 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEComicWeb.Model.StoryModel
 {
-    public class StoryCategories
+    public class StoryAuthors
     {
         [Key]
         [Column(Order = 1)]
-        public string? StoryId { get; set; }
+        public string? AuthorId { get; set; }
         [Key]
         [Column(Order = 2)]
-        public string? CategoryId { get; set; }
+        public string? StoryId { get; set; }
         public DateTime? Created { get; set; }
     }
+    
 }

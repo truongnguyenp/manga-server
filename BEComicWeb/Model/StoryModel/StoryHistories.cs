@@ -1,17 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BEComicWeb.Model.AuthencationModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BEComicWeb.Model.StoryModel
 {
-    public class StoryCategories
+    
+    public class StoryHistories
     {
         [Key]
         [Column(Order = 1)]
-        public string? StoryId { get; set; }
+        public string? ChapterId;
         [Key]
         [Column(Order = 2)]
-        public string? CategoryId { get; set; }
-        public DateTime? Created { get; set; }
+        public string? UserId;
+        public DateTime? CreatedDate;
     }
 }
