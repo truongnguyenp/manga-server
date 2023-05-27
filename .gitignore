@@ -50,6 +50,7 @@ BEComicWeb/bin/
 BEComicWeb/obj/
 .vs/BEComicWeb/v17/.suo
 *.suo
+obj/*
 bin/*
 # Auto detect text files and perform LF normalization
 * text=auto
