@@ -48,7 +48,7 @@ namespace BEComicWeb.Controllers
         [HttpPost("new")]
         public async Task<ActionResult<ChapterData>> Post(ChapterData chapterData)
         {
-            return await Task.FromResult(_IChapterRepository.UpdateChapter(chapterData));
+            return await Task.FromResult(_IChapterRepository.CreateNewChapter(chapterData));
         }
 
         // Update Chapter if this Chapter is existed.

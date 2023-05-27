@@ -1,6 +1,7 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.ChapterModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace BEComicWeb.Responsitory.StoryResponsitory
 {
@@ -29,18 +30,21 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             {
                 return null;
             }
-            if (IsChapterExists(chapterData.Chapter))
+            var chapter = _dbContext.ChaptersDb.FirstOrDefault(e => e.StoryId == chapterData.Chapter.StoryId && e.ChapterNumber == chapterData.Chapter.ChapterNumber);
+            if (chapter != null)
             {
-                _dbContext.ChaptersDb.Update(chapterData.Chapter);
+                chapter = chapterData.Chapter;
                 foreach (var chapterImage in chapterData.ChapterImagesList)
                 {
-                    if (!IsChapterImageExists(chapterImage))
+                    var image = _dbContext.ChapterImagesDb.Where(e => e.Order == chapterImage.Order).ToList();
+                    if (image == null)
                     {
                         _dbContext.ChapterImagesDb.Add(chapterImage);
                     }
                     else
                     {
-                        _dbContext.ChapterImagesDb.Update(chapterImage);
+                        _dbContext.ChapterImagesDb.RemoveRange(image);
+                        _dbContext.ChapterImagesDb.Add(chapterImage);
                     }
                 }
                 _dbContext.ChapterImagesDb.RemoveRange(_dbContext.ChapterImagesDb.Where(e => e.Order > chapterData.ChapterImagesList.Count));
