@@ -14,9 +14,11 @@ namespace BEComicWeb.Repository.ImageRepository
             _environment = env;
         }
 
-        public async Task<string> UploadImageAsync([FromForm] IFormFile file, string story_id, string chapter_id)
+        public async Task<string> UploadImageAsync([FromForm] IFormFile file, string? story_id, string? chapter_id=null)
         {
-            var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", story_id, chapter_id);
+            var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", story_id);
+            if (chapter_id != null)
+                folder_path = Path.Combine(folder_path, chapter_id);
             string file_name;
             if (file.FileName == null) 
                 file_name = Guid.NewGuid().ToString();
