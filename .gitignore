@@ -57,3 +57,8 @@ bin/*
 
 # Custom for Visual Studio
 *.cs diff=csharp
+*.dll
+*.exe
+*.pdb
+*.lib
+*.obj
