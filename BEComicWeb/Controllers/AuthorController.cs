@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using BEComicWeb.Interface.StoryInterface;
+using BEComicWeb.Model.StoryModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-using BEComicWeb.Interface.StoryInterface;
-using BEComicWeb.Repository;
-using BEComicWeb.Model.StoryModel;
-using BEComicWeb.Model.ResponseModel;
 
 namespace BEComicWeb.Controllers
 {
@@ -40,7 +36,7 @@ namespace BEComicWeb.Controllers
         }
 
         // POST author
-        [HttpPost]
+        [HttpPost("new")]
         public async Task<ActionResult<Authors>> Post(Authors author)
         {
             _IAuthorRepository.AddAuthor(author);
@@ -80,7 +76,7 @@ namespace BEComicWeb.Controllers
             var author = _IAuthorRepository.DeleteAuthor(id);
             return await Task.FromResult(author);
         }
-        
+
         private bool AuthorExists(string id)
         {
             return _IAuthorRepository.CheckAuthorExists(id);
