@@ -67,7 +67,7 @@ namespace BEComicWeb.Repository.StoryRepository
                 _dbContext.StoryCategoriesDb.RemoveRange(_dbContext.StoryCategoriesDb.Where(e => e.StoryId == storyId).ToList());
                 _dbContext.StoriesDb.Remove(story);
                 var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", story.Id);
-                Directory.Delete(folder_path);
+                Directory.Delete(folder_path, true);
                 _dbContext.SaveChanges();
                 return story;
             }

@@ -1,12 +1,19 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.ChapterModel;
+using Microsoft.EntityFrameworkCore;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace BEComicWeb.Responsitory.StoryResponsitory
 {
     public class ChapterRepository : IChapterRepository
     {
         private readonly AppDbContext _dbContext = new();
+        private readonly IHostingEnvironment _environment;
+        public ChapterRepository(IHostingEnvironment env)
+        {
+            _environment = env;
+        }
         public ChapterData CreateNewChapter(ChapterData? chapterData)
         {
             if (chapterData == null || chapterData.Chapter == null || chapterData.ChapterImagesList == null)
@@ -29,21 +36,50 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             {
                 return null;
             }
-            if (IsChapterExists(chapterData.Chapter))
+            var chapter = _dbContext.ChaptersDb.FirstOrDefault(e => e.StoryId == chapterData.Chapter.StoryId && e.ChapterNumber == chapterData.Chapter.ChapterNumber);
+            if (chapter != null)
             {
-                _dbContext.ChaptersDb.Update(chapterData.Chapter);
+                chapter = chapterData.Chapter;
                 foreach (var chapterImage in chapterData.ChapterImagesList)
                 {
-                    if (!IsChapterImageExists(chapterImage))
+                    var image = _dbContext.ChapterImagesDb.FirstOrDefault(e => (e.Order == chapterImage.Order && e.ChapterId == chapterImage.Id));
+                    if (image == null)
                     {
                         _dbContext.ChapterImagesDb.Add(chapterImage);
                     }
                     else
                     {
-                        _dbContext.ChapterImagesDb.Update(chapterImage);
+                        var splitFilePath = chapterImage.ImagePath.Split('/');
+                        string filePath =  Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", splitFilePath[splitFilePath.Length - 3], splitFilePath[splitFilePath.Length - 2], splitFilePath[splitFilePath.Length - 1]);
+                        try
+                        {
+                            File.Delete(filePath);
+                            Console.WriteLine("File deleted successfully.");
+                        }
+                        catch (IOException e)
+                        {
+                            Console.WriteLine("An error occurred while deleting the file: " + e.Message);
+                        }
+                        _dbContext.ChapterImagesDb.Remove(image);
+                        _dbContext.ChapterImagesDb.Add(chapterImage);
                     }
                 }
-                _dbContext.ChapterImagesDb.RemoveRange(_dbContext.ChapterImagesDb.Where(e => e.Order > chapterData.ChapterImagesList.Count));
+                var outImage = _dbContext.ChapterImagesDb.Where(e => e.Order >= chapterData.ChapterImagesList.Count);
+                _dbContext.ChapterImagesDb.RemoveRange(outImage);
+                foreach (var image in outImage)
+                {
+                    var splitFilePath = image.ImagePath.Split('/');
+                    string filePath = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", splitFilePath[splitFilePath.Length - 3], splitFilePath[splitFilePath.Length - 2], splitFilePath[splitFilePath.Length - 1]);
+                    try
+                    {
+                        File.Delete(filePath);
+                        Console.WriteLine("File deleted successfully.");
+                    }
+                    catch (IOException e)
+                    {
+                        Console.WriteLine("An error occurred while deleting the file: " + e.Message);
+                    }
+                }
                 _dbContext.SaveChanges();
                 return chapterData;
             }
