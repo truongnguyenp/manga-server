@@ -15,5 +15,7 @@ namespace BEComicWeb.Interface.StoryInterface
         Stories DeleteStory(string? id);
         public bool CheckStoryExists(string? id);
         public List<Chapters> GetAllChaptersOfStory(string story_id);
+        public List<StoryData> GetFollowStories(string userName, int page, int n_story);
+        public int GetFollowStoriesSize(string userName);
     }
 }

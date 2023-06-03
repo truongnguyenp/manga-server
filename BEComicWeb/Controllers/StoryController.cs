@@ -27,7 +27,7 @@ namespace BEComicWeb.Controllers
         [HttpGet("newest/n-pages")]
         public async Task<ActionResult<int>> GetStorySize(int n_stories)
         {
-            return (ActionResult<int>)await Task.FromResult(Math.Ceiling((double)_IStoryRepository.GetStorySize() / n_stories));
+            return await Task.FromResult((int) Math.Ceiling((double)_IStoryRepository.GetStorySize() / n_stories));
         }
 
         // Get List of newest stories.
@@ -49,14 +49,14 @@ namespace BEComicWeb.Controllers
                 return NotFound();
             }
             var chapters = _IStoryRepository.GetAllChaptersOfStory(story_id);
-            return new { story, chapters};
+            return await Task.FromResult(new { story, chapters});
         }
 
         [HttpGet("n_pages")]
         public async Task<ActionResult<int>> GetSearchStoryListSize(string search_string, int n_stories)
         {
             var n_pages = await Task.FromResult(_IStoryRepository.GetSearchStoryListSize(search_string));
-            return (ActionResult<int>)Math.Ceiling((double)n_pages / n_stories);
+            return await Task.FromResult((int) Math.Ceiling((double)n_pages / n_stories));
         }
 
         // Create new Story
@@ -107,6 +107,16 @@ namespace BEComicWeb.Controllers
         private bool StoryExists(string id)
         {
             return _IStoryRepository.CheckStoryExists(id);
+        }
+        [HttpGet("follow/{page}/{n_stories}")]
+        public async Task<ActionResult<IEnumerable<StoryData>>> GetFolloiwStories(int page, int n_stories)
+        {
+            return await Task.FromResult(_IStoryRepository.GetFollowStories(User.Identity.Name, page, n_stories));
+        }
+        [HttpGet("follow/size")]
+        public async Task<ActionResult<int>> GetFolloiwStoriesSize(int n_stories)
+        {
+            return await Task.FromResult((int) Math.Ceiling((double)_IStoryRepository.GetFollowStoriesSize(User.Identity.Name) / n_stories));
         }
     }
 }

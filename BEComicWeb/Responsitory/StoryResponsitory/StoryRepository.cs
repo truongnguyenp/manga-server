@@ -188,5 +188,24 @@ namespace BEComicWeb.Repository.StoryRepository
             var res = _dbContext.ChaptersDb.Where(e => e.StoryId == story_id).ToList();
             return res;
         }
+        public List<StoryData> GetFollowStories(string userName, int page, int n_story)
+        {
+            var storiesIds = _dbContext.StoryFollowsDb.Where(e => e.UserName == userName)
+                                                     .OrderByDescending(e => e.CreatedDate)
+                                                     .Skip((page - 1) * n_story)
+                                                     .Take(n_story)
+                                                     .Select(e => e.StoryId);
+            List<StoryData> res = new List<StoryData>();
+            foreach (var storyId in storiesIds)
+            {
+                res.Add(GetStory(storyId));
+            }
+            return res;
+
+        }
+        public int GetFollowStoriesSize(string userName)
+        {
+            return _dbContext.StoryFollowsDb.Where(e => e.UserName == userName).Count();
+        }
     }
 }
