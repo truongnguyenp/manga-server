@@ -17,6 +17,7 @@ namespace BEComicWeb.Data
         public virtual DbSet<StoryTranslators> StoryTranslatorDb { get; set; }
         public virtual DbSet<StoryCategories> StoryCategoriesDb { get; set; }
         public virtual DbSet<ChapterImages> ChapterImagesDb { get; set; }
+        public virtual DbSet<Comments> CommentsDb { get; set; }
         public AppDbContext()
         {
         }
