@@ -41,7 +41,6 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
         public Comments AddNewComment(string chapterId, string title, string userName)
         {
             Comments Comment;
-            string Message;
             Comment = new Comments()
             {
                 Id = Guid.NewGuid().ToString(),
@@ -53,7 +52,6 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             };
             _dbContext.CommentsDb.Add(Comment);
             _dbContext.SaveChanges();
-            Message = "Success";
             return Comment;
 
         }
