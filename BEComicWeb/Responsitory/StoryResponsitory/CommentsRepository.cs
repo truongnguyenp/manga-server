@@ -8,175 +8,81 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
     public class CommentsRepository : ICommentsRepository
     {
         AppDbContext _dbContext = new();
-        public object GetCommentsOfChapter(string chapterId, int page, int n_comments)
+        public List<Comments> GetCommentsOfChapter(string chapterId, int page, int n_comments)
         {
-            string Message;
-            List<Comments> CommentList = new List<Comments>();
-            try
-            {
-                CommentList = _dbContext.CommentsDb.Where(e => e.ChapterId == chapterId)
-                                 .Skip((page - 1) * n_comments)
-                                 .Take(n_comments)
-                                 .ToList();
-                Message = "Success";
-                return new { Message, CommentList };
-            }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
-                CommentList = null;
-                return new { Message, CommentList };
-            }
-        }  
-        public object GetCommentsSizeOfChapter(string chapterId)
-        {
-            string Message;
-            int CommentSize;
-            try
-            {
-                CommentSize = _dbContext.CommentsDb.Where(e => e.ChapterId == chapterId).Count();
-                Message = "Success";
-                return new { Message, CommentSize };
-            }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
-                CommentSize = 0;
-                return new { Message, CommentSize };
-            }
+            List<Comments> CommentList = _dbContext.CommentsDb.Where(e => e.ChapterId == chapterId)
+                                                               .OrderBy(e => e.CreatedDate)
+                                                               .Skip((page - 1) * n_comments)
+                                                               .Take(n_comments)
+                                                               .ToList();
+            return CommentList;
         }
-        public object GetCommentsOfStory(string storyId, int page, int n_comments)
+        public int GetCommentsSizeOfChapter(string chapterId)
         {
-            string Message;
-            List<Comments> CommentList = new List<Comments>();
-            try
-            {
-                var chapterIds = _dbContext.ChaptersDb.Where(e => e.StoryId == storyId).Select(e => e.Id);
-                CommentList = _dbContext.CommentsDb.Where(e => chapterIds.Contains(e.ChapterId))
-                                 .Skip((page - 1) * n_comments)
-                                 .Take(n_comments)
-                                 .ToList();
-                Message = "Success";
-                return new { Message, CommentList };
-            }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
-                CommentList = null;
-                return new { Message, CommentList };
-            }
+            int CommentSize = _dbContext.CommentsDb.Where(e => e.ChapterId == chapterId).Count();
+            return CommentSize;
         }
-        public object GetCommentsSizeOfStory(string storyId)
+        public List<Comments> GetCommentsOfStory(string storyId, int page, int n_comments)
         {
-            string Message;
-            int CommentSize;
-            try
-            {
-                var chapterIds = _dbContext.ChaptersDb.Where(e => e.StoryId == storyId).Select(e => e.Id);
-                CommentSize = _dbContext.CommentsDb.Where(e => chapterIds.Contains(e.ChapterId)).Count();
-                Message = "Success";
-                return new { Message, CommentSize };
-            }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
-                CommentSize = 0;
-                return new { Message, CommentSize };
-            }
+            var chapterIds = _dbContext.ChaptersDb.Where(e => e.StoryId == storyId).Select(e => e.Id);
+            var CommentList = _dbContext.CommentsDb.Where(e => chapterIds.Contains(e.ChapterId))
+                                                .OrderBy(e => e.CreatedDate)
+                                                .Skip((page - 1) * n_comments)
+                                                .Take(n_comments)
+                                                .ToList();
+            return CommentList;
         }
-        public object AddNewComment(string chapterId, string title, string userName)
+        public int GetCommentsSizeOfStory(string storyId)
+        {
+            var chapterIds = _dbContext.ChaptersDb.Where(e => e.StoryId == storyId).Select(e => e.Id);
+            int CommentSize = _dbContext.CommentsDb.Where(e => chapterIds.Contains(e.ChapterId)).Count();
+            return CommentSize;
+        }
+        public Comments AddNewComment(string chapterId, string title, string userName)
         {
             Comments Comment;
             string Message;
-            try
+            Comment = new Comments()
             {
-                Comment = new Comments()
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    ChapterId = chapterId,
-                    Title = title,
-                    UserName = userName,
-                    CreatedDate = DateTime.Now,
-                    LastModifiedDate = DateTime.Now
-                };
-                _dbContext.CommentsDb.Add(Comment);
-                _dbContext.SaveChanges();
-                Message = "Success";
-                return new { Message, Comment };
-            }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
-                Comment = null;
-                return new { Message, Comment };
-            }
+                Id = Guid.NewGuid().ToString(),
+                ChapterId = chapterId,
+                Title = title,
+                UserName = userName,
+                CreatedDate = DateTime.Now,
+                LastModifiedDate = DateTime.Now
+            };
+            _dbContext.CommentsDb.Add(Comment);
+            _dbContext.SaveChanges();
+            Message = "Success";
+            return Comment;
+
         }
 
-        public object UpdateComment(string commentId, string newTitle, string userName)
+        public Comments UpdateComment(string commentId, string newTitle, string userName)
         {
-            string Message;
-            Comments Comment;
-            try
+            var Comment = _dbContext.CommentsDb.FirstOrDefault(e => e.Id == commentId);
+            if (Comment.UserName != userName)
             {
-                Comment = _dbContext.CommentsDb.FirstOrDefault(e => e.Id == commentId);
-                if (Comment.UserName != userName)
-                {
-                    Message = "You cannot update Comments that you are not its own.";
-                    Comment = null;
-                    return new { Message, Comment };
-                }
-                Comment.Title = newTitle;
-                _dbContext.SaveChanges();
-                Message = "Success";
-                return new { Message, Comment };
-            }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
                 Comment = null;
-                return new { Message, Comment };
+                return Comment;
             }
+            Comment.Title = newTitle;
+            _dbContext.SaveChanges();
+            return Comment;
         }
-        public object DeleteCommentByUser(string commentId, string userName)
+        public Comments DeleteCommentByUser(string commentId, string userName)
         {
-            Comments Comment;
-            string Message;
-            try
+            var Comment = _dbContext.CommentsDb.FirstOrDefault(e => e.Id == commentId);
+            if (Comment.UserName != userName)
             {
-                Comment = _dbContext.CommentsDb.FirstOrDefault(e => e.Id == commentId);
-                if (Comment.UserName != userName)
-                {
-                    Message = "You cannot delete Comments that you are not its own.";
-                }
-                else
-                {
-                    Message = "Success";
-                }
-                return new { Message, Comment };
+                return null;
             }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
-                Comment = null;
-                return new { Message, Comment };
-            }
+            return Comment;
         }
-        public object DeleteComment(string commentId)
+        public Comments DeleteComment(string commentId)
         {
-            Comments Comment;
-            string Message;
-            try
-            {
-                Comment = _dbContext.CommentsDb.FirstOrDefault(e => e.Id == commentId);
-                Message = "Success";
-                return new { Message, Comment };
-            }
-            catch (Exception ex)
-            {
-                Message = ex.Message;
-                Comment = null;
-                return new { Message, Comment };
-            }
+            var Comment = _dbContext.CommentsDb.FirstOrDefault(e => e.Id == commentId);
+            return Comment;
         }
     }
 }
