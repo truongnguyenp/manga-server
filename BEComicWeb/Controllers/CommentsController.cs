@@ -39,22 +39,32 @@ namespace BEComicWeb.Controllers
         [HttpPost("new")]
         public async Task<ActionResult<Comments>> AddNewComment(string chapterId, string title)
         {
-            return await Task.FromResult(_ICommentsRepository.AddNewComment(chapterId, title, User.Identity.Name));
+            if (User.Identity.Name != null)
+            {
+                return await Task.FromResult(_ICommentsRepository.AddNewComment(chapterId, title, User.Identity.Name));
+            }
+            return null;
         }
         [HttpPut("update/{commentId}")]
         public async Task<ActionResult<Comments>> UpdateComment(string commentId, string newTitle)
         {
-            return await Task.FromResult(_ICommentsRepository.UpdateComment(commentId, newTitle, User.Identity.Name));
+            if (User.Identity.Name != null)
+                return await Task.FromResult(_ICommentsRepository.UpdateComment(commentId, newTitle, User.Identity.Name));
+            return null;
         }
         [HttpDelete("delete/{commentId}")]
         public async Task<ActionResult<Comments>> DeleteCommentByUser(string commentId)
         {
-            return await Task.FromResult(_ICommentsRepository.DeleteCommentByUser(commentId, User.Identity.Name));
+            if (User.Identity.Name != null)
+                return await Task.FromResult(_ICommentsRepository.DeleteCommentByUser(commentId, User.Identity.Name));
+            return null;
         }
         [HttpDelete("admin/delete/{commentId}")]
         public async Task<ActionResult<Comments>> DeleteCommentByAdmin(string commentId)
         {
-            return await Task.FromResult(_ICommentsRepository.DeleteComment(commentId));
+            if (User.Identity.Name != null)
+                return await Task.FromResult(_ICommentsRepository.DeleteComment(commentId));
+            return null;
         }
     }
 }

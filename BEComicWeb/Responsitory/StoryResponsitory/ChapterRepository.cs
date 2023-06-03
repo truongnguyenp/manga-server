@@ -105,7 +105,10 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             result.Chapter = _dbContext.ChaptersDb.FirstOrDefault(e => e.Id == id);
             if (result.Chapter != null)
             {
+                result.Chapter.Views++;
+                result.Likes = _dbContext.ChapterLikesDb.Where(e => e.ChapterId == id).Count();
                 result.ChapterImagesList = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == id).ToList();
+                _dbContext.SaveChanges();
                 return result;
             }
             return null;

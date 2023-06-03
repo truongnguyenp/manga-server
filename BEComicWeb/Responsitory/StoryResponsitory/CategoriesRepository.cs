@@ -59,7 +59,12 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
                     {
                         Story = story,
                         StoryCategoryList = new List<Categories>(),
-                        StoryAuthorList = new List<Authors>()
+                        StoryAuthorList = new List<Authors>(),
+                        Likes = _dbContext.ChapterLikesDb.Where(
+                                                          e => _dbContext.ChaptersDb.Where(f => f.StoryId == story.Id)
+                                                                                    .Select(f => f.Id)
+                                                                                    .Contains(e.ChapterId)
+                                                        ).Count()
                     };
                     foreach (var storyCate in _dbContext.StoryCategoriesDb.Where(e => e.StoryId == story.Id))
                     {

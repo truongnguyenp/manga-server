@@ -17,7 +17,9 @@ namespace BEComicWeb.Data
         public virtual DbSet<StoryTranslators> StoryTranslatorDb { get; set; }
         public virtual DbSet<StoryCategories> StoryCategoriesDb { get; set; }
         public virtual DbSet<ChapterImages> ChapterImagesDb { get; set; }
+        public virtual DbSet<ChapterLikes> ChapterLikesDb { get; set; }
         public virtual DbSet<Comments> CommentsDb { get; set; }
+        public virtual DbSet<StoryFollows> StoryFollowsDb { get; set; }
         public AppDbContext()
         {
         }
@@ -30,6 +32,9 @@ namespace BEComicWeb.Data
             builder.Entity<StoryHistories>().HasKey(e => new { e.ChapterId, e.UserId });
             builder.Entity<StoryCategories>().HasKey(e => new { e.StoryId, e.CategoryId });
             builder.Entity<StoryAuthors>().HasKey(e => new { e.StoryId, e.AuthorId });
+            builder.Entity<ChapterLikes>().HasKey(e => new { e.UserName, e.ChapterId });
+            builder.Entity<StoryFollows>().HasKey(e => new { e.UserName, e.StoryId });
+
             base.OnModelCreating(builder);
             builder.Ignore<UserInfo>();
             builder.Ignore<ChapterData>();

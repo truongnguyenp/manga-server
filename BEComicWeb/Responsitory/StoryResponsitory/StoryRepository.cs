@@ -76,9 +76,18 @@ namespace BEComicWeb.Repository.StoryRepository
 
         public StoryData? GetStory(string? id)
         {
+            var story = _dbContext.StoriesDb.FirstOrDefault(e => e.Id == id);
             StoryData? storyData = new StoryData()
             {
-                Story = _dbContext.StoriesDb.FirstOrDefault(e => e.Id == id)
+                Story = story,
+                StoryAuthorList = new List<Authors>(),
+                StoryCategoryList = new List<Categories>(),
+                Likes = _dbContext.ChapterLikesDb.Where(
+                                                    e => _dbContext.ChaptersDb.Where(f => f.StoryId == story.Id)
+                                                                            .Select(f => f.Id)
+                                                                            .Contains(e.ChapterId)
+                                                ).Count(),
+                Follows = _dbContext.StoryFollowsDb.Where(e => e.StoryId == story.Id).Count()
             };
             foreach (var storyCate in _dbContext.StoryCategoriesDb.Where(e => e.StoryId == id))
             {
@@ -97,7 +106,13 @@ namespace BEComicWeb.Repository.StoryRepository
             {
                 Story = story,
                 StoryAuthorList = new List<Authors>(),
-                StoryCategoryList = new List<Categories>()
+                StoryCategoryList = new List<Categories>(),
+                Likes = _dbContext.ChapterLikesDb.Where(
+                                                    e => _dbContext.ChaptersDb.Where(f => f.StoryId == story.Id)
+                                                                            .Select(f => f.Id)
+                                                                            .Contains(e.ChapterId)
+                                                ).Count(),
+                Follows = _dbContext.StoryFollowsDb.Where(e => e.StoryId == story.Id).Count()
             };
             foreach (var storyCate in _dbContext.StoryCategoriesDb.Where(e => e.StoryId == story.Id))
             {

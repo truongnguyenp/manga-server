@@ -6,5 +6,6 @@ namespace BEComicWeb.Model.ChapterModel
     {
         public Chapters Chapter { get; set; }
         public List<ChapterImages> ChapterImagesList { get; set; }
+        public int Likes { get; set; }
     }
 }
