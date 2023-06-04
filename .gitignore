@@ -23,7 +23,7 @@ build/
 
 # Resharper files
 _ReSharper*/
-*.ReSharper*
+.ReSharper
 
 # Visual Studio Code files
 .vscode/
@@ -45,7 +45,7 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 *.userprefs
-BEComicWeb/BEComicWeb.csproj
+
 BEComicWeb/bin/
 BEComicWeb/obj/
 .vs/BEComicWeb/v17/.suo
