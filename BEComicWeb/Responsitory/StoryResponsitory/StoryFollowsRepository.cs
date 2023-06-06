@@ -7,7 +7,7 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
     public class StoryFollowsRepository : IStoryFollowsRepository
     {
         AppDbContext _dbContext = new();
-        public StoryFollows Follow(string storyId, string userName)
+        public StoryFollows ChangeFollowStatus(string storyId, string userName)
         {
             var follow = _dbContext.StoryFollowsDb.FirstOrDefault(e => (e.StoryId == storyId && e.UserName == userName));
             if (follow == null)
@@ -22,18 +22,12 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
                 _dbContext.SaveChanges();
                 return foll;
             }
-            return null;
-        }
-        public StoryFollows UnFollow(string storyId, string userName)
-        {
-            var follow = _dbContext.StoryFollowsDb.FirstOrDefault(e => (e.StoryId == storyId && e.UserName == userName));
-            if (follow != null)
+            else
             {
                 _dbContext.StoryFollowsDb.Remove(follow);
                 _dbContext.SaveChanges();
                 return follow;
             }
-            return null;
         }
         public bool IsFollowed(string storyId, string userName)
         {

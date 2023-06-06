@@ -62,7 +62,7 @@ namespace BEComicWeb.Controllers
         // Create new Story
         // POST story
         [HttpPost("new")]
-        public async Task<ActionResult<StoryData>> Post(StoryData storyData)
+        public async Task<ActionResult<StoryData>> Post(BaseStoryData storyData)
         {
             return await Task.FromResult(_IStoryRepository.AddStory(storyData));
         }
@@ -70,15 +70,11 @@ namespace BEComicWeb.Controllers
         // Update Story if this story is existed.
         // PUT story/update/{id}
         [HttpPut("update/{id}")]
-        public async Task<ActionResult<StoryData>> Put(string id, StoryData storyData)
+        public async Task<ActionResult<StoryData>> Put(string id, BaseStoryData storyData)
         {
-            if (id != storyData.Story.Id)
-            {
-                return BadRequest();
-            }
             try
             {
-                _IStoryRepository.UpdateStory(storyData);
+                return await Task.FromResult(_IStoryRepository.UpdateStory(id, storyData));
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -91,7 +87,6 @@ namespace BEComicWeb.Controllers
                     throw;
                 }
             }
-            return await Task.FromResult(storyData);
         }
 
         // Delete Story

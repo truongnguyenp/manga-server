@@ -1,6 +1,7 @@
 ﻿using BEComicWeb.Data;
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.StoryModel;
+using BEComicWeb.Repository.StoryRepository;
 
 namespace BEComicWeb.Responsitory.StoryResponsitory
 {
@@ -55,26 +56,8 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
                                                         
                 foreach (var story in storyList)
                 {
-                    StoryData? storyData = new StoryData()
-                    {
-                        Story = story,
-                        StoryCategoryList = new List<Categories>(),
-                        StoryAuthorList = new List<Authors>(),
-                        Likes = _dbContext.ChapterLikesDb.Where(
-                                                          e => _dbContext.ChaptersDb.Where(f => f.StoryId == story.Id)
-                                                                                    .Select(f => f.Id)
-                                                                                    .Contains(e.ChapterId)
-                                                        ).Count()
-                    };
-                    foreach (var storyCate in _dbContext.StoryCategoriesDb.Where(e => e.StoryId == story.Id))
-                    {
-                        storyData.StoryCategoryList.Add(_dbContext.CategoriesDb.FirstOrDefault(e => e.Id == storyCate.CategoryId));
-                    }
-                    foreach (var storyAuthor in _dbContext.StoryAuthorsDb.Where(e => e.StoryId == story.Id))
-                    {
-                        storyData.StoryAuthorList.Add(_dbContext.AuthorsDb.FirstOrDefault(e => e.Id == storyAuthor.AuthorId));
-                    }
-                    res.Add(storyData);
+                    IStoryRepository IStory = new StoryRepository(null);
+                    res.Add(IStory.GetStoryData(story));
                 }
                 return res;
             }

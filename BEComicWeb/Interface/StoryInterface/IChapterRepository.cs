@@ -7,6 +7,7 @@ namespace BEComicWeb.Interface.StoryInterface
         public ChapterData CreateNewChapter(ChapterData chapterData);
         public ChapterData UpdateChapter(ChapterData chapterData);
         public ChapterData DeleteChapter(string id);
+        public void DeleteChapterOfStory(string storyId);
         public ChapterData GetChapter(string id);
         public Chapters GetNewestChapterOfStory(string story_id);
         public List<Chapters> GetAllChaptersOfStory(string story_id);

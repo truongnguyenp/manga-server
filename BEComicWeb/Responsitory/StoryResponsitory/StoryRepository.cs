@@ -2,6 +2,9 @@
 using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.ChapterModel;
 using BEComicWeb.Model.StoryModel;
+using BEComicWeb.Responsitory.StoryResponsitory;
+using System.Linq;
+using Vultr.API.Models;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace BEComicWeb.Repository.StoryRepository
@@ -14,60 +17,77 @@ namespace BEComicWeb.Repository.StoryRepository
         {
             _environment = env;
         }
-        public StoryData AddStory(StoryData? storyData)
+        public StoryData AddStory(BaseStoryData? storyData)
         {
-            if (storyData == null || storyData.Story == null)
+            if (storyData == null || storyData.Name == null)
             {
                 return null;
             }
-            storyData.Story.CreatedDate = DateTime.Now;
-            storyData.Story.LastModified = DateTime.Now;
-            _dbContext.StoriesDb.Add(storyData.Story);
-            foreach (var cate in storyData.StoryCategoryList)
+            Stories story = new Stories()
             {
-                StoryCategories storyCategories = new StoryCategories()
-                {
-                    StoryId = storyData.Story.Id,
-                    CategoryId = cate.Id
-                };
-                _dbContext.StoryCategoriesDb.Add(storyCategories);
-            }
-            foreach (var author in storyData.StoryAuthorList)
+                Id = Guid.NewGuid().ToString(),
+                Name = storyData.Name,
+                Description = storyData.Description,
+                Image = storyData.Image,
+                Status = storyData.Status,
+                Views = 0,
+                CreatedDate = DateTime.Now,
+                LastModified = DateTime.Now
+            };
+            _dbContext.StoriesDb.Add(story);
+            StoryCategories storyCategory = new StoryCategories()
             {
-                StoryAuthors storyCategories = new StoryAuthors()
-                {
-                    StoryId = storyData.Story.Id,
-                    AuthorId = author.Id
-                };
-                _dbContext.StoryAuthorsDb.Add(storyCategories);
-            }
+                StoryId = story.Id,
+                CategoryId = storyData.CategoryId,
+                Created = DateTime.Now
+            };
+            _dbContext.StoryCategoriesDb.Add(storyCategory);
+            StoryAuthors storyAuthor = new StoryAuthors()
+            {
+                StoryId = story.Id,
+                AuthorId = storyData.AuthorId,
+                Created = DateTime.Now
+            };
+            _dbContext.StoryAuthorsDb.Add(storyAuthor);
             _dbContext.SaveChanges();
-            var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", storyData.Story.Id);
+            var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", story.Id);
             Directory.CreateDirectory(folder_path);
-            return storyData;
+            StoryData result = new StoryData()
+            {
+                Story = story,
+                Author = _dbContext.AuthorsDb.FirstOrDefault(e => e.Id == storyData.AuthorId),
+                Category = _dbContext.CategoriesDb.FirstOrDefault(e => e.Id == storyData.CategoryId),
+                Likes = 0,
+                Follows = 0
+            };
+            return result;
         }
 
         public bool CheckStoryExists(string? id)
         {
-            Stories? story = _dbContext.StoriesDb.Find(id);
-            if (story != null)
-            {
-                return true;
-            }
-            return false;
+           return _dbContext.StoriesDb.FirstOrDefault(e => e.Id == id) != null;
         }
 
         public Stories? DeleteStory(string? storyId)
         {
-            Stories? story = _dbContext.StoriesDb.Find(storyId);
+            Stories? story = _dbContext.StoriesDb.FirstOrDefault(e => e.Id == storyId);
             if (story != null)
             {
-                _dbContext.ChaptersDb.RemoveRange(_dbContext.ChaptersDb.Where(e => e.StoryId == storyId).ToList());
-                _dbContext.StoryAuthorsDb.RemoveRange(_dbContext.StoryAuthorsDb.Where(e => e.StoryId == storyId).ToList());
-                _dbContext.StoryCategoriesDb.RemoveRange(_dbContext.StoryCategoriesDb.Where(e => e.StoryId == storyId).ToList());
-                _dbContext.StoriesDb.Remove(story);
+                var category = _dbContext.StoryCategoriesDb.FirstOrDefault(e => e.StoryId == storyId);
+                var author = _dbContext.StoryAuthorsDb.FirstOrDefault(e => e.StoryId != storyId);
+                //_dbContext.ChaptersDb.RemoveRange(_dbContext.ChaptersDb.Where(e => e.StoryId == storyId).ToList());
+                //_dbContext.StoryAuthorsDb.RemoveRange(_dbContext.StoryAuthorsDb.Where(e => e.StoryId == storyId).ToList());
+                //_dbContext.StoryCategoriesDb.RemoveRange(_dbContext.StoryCategoriesDb.Where(e => e.StoryId == storyId).ToList());
+                
+                _dbContext.StoryCategoriesDb.Remove(category);
+                _dbContext.StoryAuthorsDb.Remove(author);
+                _dbContext.StoryFollowsDb.RemoveRange(_dbContext.StoryFollowsDb.Where(e => e.StoryId == storyId));
+                IChapterRepository IChapter = new ChapterRepository(_environment);
+                IChapter.DeleteChapterOfStory(storyId);
                 var folder_path = Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", story.Id);
                 Directory.Delete(folder_path, true);
+
+                _dbContext.StoriesDb.Remove(story);
                 _dbContext.SaveChanges();
                 return story;
             }
@@ -77,11 +97,13 @@ namespace BEComicWeb.Repository.StoryRepository
         public StoryData? GetStory(string? id)
         {
             var story = _dbContext.StoriesDb.FirstOrDefault(e => e.Id == id);
+            story.Views++;
+            
             StoryData? storyData = new StoryData()
             {
                 Story = story,
-                StoryAuthorList = new List<Authors>(),
-                StoryCategoryList = new List<Categories>(),
+                Author = _dbContext.AuthorsDb.FirstOrDefault(e => e.Id == _dbContext.StoryAuthorsDb.FirstOrDefault(e => e.StoryId == id).AuthorId),
+                Category = _dbContext.CategoriesDb.FirstOrDefault(e => e.Id == _dbContext.StoryCategoriesDb.FirstOrDefault(e => e.StoryId == id).CategoryId),
                 Likes = _dbContext.ChapterLikesDb.Where(
                                                     e => _dbContext.ChaptersDb.Where(f => f.StoryId == story.Id)
                                                                             .Select(f => f.Id)
@@ -89,14 +111,7 @@ namespace BEComicWeb.Repository.StoryRepository
                                                 ).Count(),
                 Follows = _dbContext.StoryFollowsDb.Where(e => e.StoryId == story.Id).Count()
             };
-            foreach (var storyCate in _dbContext.StoryCategoriesDb.Where(e => e.StoryId == id))
-            {
-                storyData.StoryCategoryList.Add(_dbContext.CategoriesDb.FirstOrDefault(e => e.Id == storyCate.CategoryId));
-            }
-            foreach (var storyAuthor in _dbContext.StoryAuthorsDb.Where(e => e.StoryId == id))
-            {
-                storyData.StoryAuthorList.Add(_dbContext.AuthorsDb.FirstOrDefault(e => e.Id == storyAuthor.AuthorId));
-            }
+            _dbContext.SaveChanges();
             return storyData;
         }
 
@@ -105,8 +120,8 @@ namespace BEComicWeb.Repository.StoryRepository
             StoryData? storyData = new StoryData()
             {
                 Story = story,
-                StoryAuthorList = new List<Authors>(),
-                StoryCategoryList = new List<Categories>(),
+                Author = _dbContext.AuthorsDb.FirstOrDefault(e => e.Id == _dbContext.StoryAuthorsDb.FirstOrDefault(e => e.StoryId == story.Id).AuthorId),
+                Category = _dbContext.CategoriesDb.FirstOrDefault(e => e.Id == _dbContext.StoryCategoriesDb.FirstOrDefault(e => e.StoryId == story.Id).CategoryId),
                 Likes = _dbContext.ChapterLikesDb.Where(
                                                     e => _dbContext.ChaptersDb.Where(f => f.StoryId == story.Id)
                                                                             .Select(f => f.Id)
@@ -114,22 +129,6 @@ namespace BEComicWeb.Repository.StoryRepository
                                                 ).Count(),
                 Follows = _dbContext.StoryFollowsDb.Where(e => e.StoryId == story.Id).Count()
             };
-            foreach (var storyCate in _dbContext.StoryCategoriesDb.Where(e => e.StoryId == story.Id))
-            {
-                var category = _dbContext.CategoriesDb.FirstOrDefault(e => e.Id == storyCate.CategoryId);
-                if (category != null)
-                {
-                    storyData.StoryCategoryList.Add(category);
-                }
-            }
-            foreach (var storyAuthor in _dbContext.StoryAuthorsDb.Where(e => e.StoryId == story.Id))
-            {
-                var author = _dbContext.AuthorsDb.FirstOrDefault(e => e.Id == storyAuthor.AuthorId);
-                if (author != null)
-                {
-                    storyData.StoryAuthorList.Add(author);
-                }
-            }
             return storyData;
         }
 
@@ -137,9 +136,9 @@ namespace BEComicWeb.Repository.StoryRepository
         {
             List<StoryData> res = new List<StoryData>();
             List<Stories> storyList = _dbContext.StoriesDb.OrderByDescending(e => e.LastModified)
-                                                    .Take(n_stories)
-                                                    .Skip(n_stories * (page - 1))
-                                                    .ToList();
+                                                          .Take(n_stories)
+                                                          .Skip(n_stories * (page - 1))
+                                                          .ToList();
             foreach (var story in storyList)
             {
                 res.Add(GetStoryData(story));
@@ -150,9 +149,9 @@ namespace BEComicWeb.Repository.StoryRepository
         public List<StoryData> SearchStory(string search_string, int page, int n_stories = 30)
         {
             var storyList = _dbContext.StoriesDb.Where(e => e.Name.ToLower().Contains(search_string.ToLower()))
-                                            .Take(n_stories)
-                                            .Skip(n_stories * (page - 1))
-                                            .ToList();
+                                                .Take(n_stories)
+                                                .Skip(n_stories * (page - 1))
+                                                .ToList();
             List<StoryData> res = new List<StoryData>();
             foreach (var story in storyList)
             {
@@ -161,17 +160,36 @@ namespace BEComicWeb.Repository.StoryRepository
             return res;
         }
 
-        public StoryData UpdateStory(StoryData? storyData)
+        public StoryData UpdateStory(string id, BaseStoryData? storyData)
         {
-            if (storyData == null || storyData.Story == null)
+            if (storyData == null || id != null)
             {
                 return null;
             }
-            storyData.Story.LastModified = DateTime.Now;
-            _dbContext.StoriesDb.Update(storyData.Story);
-
+            var story = _dbContext.StoriesDb.FirstOrDefault(e => e.Id == id);
+            story.LastModified = DateTime.Now;
+            story.Status = storyData.Status;
+            story.Name = storyData.Name;
+            story.Description = storyData.Description;
+            story.Image = storyData.Image; 
+            _dbContext.StoriesDb.Update(story);
+            var author = _dbContext.StoryAuthorsDb.FirstOrDefault(e => e.StoryId == story.Id);
+            StoryCategories storyCategory = new StoryCategories()
+            {
+                StoryId = story.Id,
+                CategoryId = storyData.CategoryId,
+                Created = DateTime.Now
+            };
+            _dbContext.StoryCategoriesDb.Update(storyCategory);
+            StoryAuthors storyAuthor = new StoryAuthors()
+            {
+                StoryId = story.Id,
+                AuthorId = storyData.AuthorId,
+                Created = DateTime.Now
+            };
+            _dbContext.StoryAuthorsDb.Update(storyAuthor);
             _dbContext.SaveChanges();
-            return storyData;
+            return GetStoryData(story);
         }
         public int GetSearchStoryListSize(string? search_string)
         {

@@ -6,6 +6,8 @@ using System.Security.Claims;
 using System.Text;
 using BEComicWeb.Model.AuthencationModel;
 using BEComicWeb.Model.ResponseModel;
+using System;
+using System.Reflection;
 
 namespace BEComicWeb.Controllers
 {

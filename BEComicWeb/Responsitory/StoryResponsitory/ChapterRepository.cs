@@ -42,30 +42,17 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
                 chapter = chapterData.Chapter;
                 foreach (var chapterImage in chapterData.ChapterImagesList)
                 {
-                    var image = _dbContext.ChapterImagesDb.FirstOrDefault(e => (e.Order == chapterImage.Order && e.ChapterId == chapterImage.Id));
+                    var image = _dbContext.ChapterImagesDb.FirstOrDefault(e => e.Id == chapterImage.Id);
                     if (image == null)
                     {
                         _dbContext.ChapterImagesDb.Add(chapterImage);
                     }
                     else
                     {
-                        var splitFilePath = chapterImage.ImagePath.Split('/');
-                        string filePath =  Path.Combine(_environment.ContentRootPath, "Data", "ImageStorage", splitFilePath[splitFilePath.Length - 3], splitFilePath[splitFilePath.Length - 2], splitFilePath[splitFilePath.Length - 1]);
-                        try
-                        {
-                            File.Delete(filePath);
-                            Console.WriteLine("File deleted successfully.");
-                        }
-                        catch (IOException e)
-                        {
-                            Console.WriteLine("An error occurred while deleting the file: " + e.Message);
-                        }
-                        _dbContext.ChapterImagesDb.Remove(image);
-                        _dbContext.ChapterImagesDb.Add(chapterImage);
+                        image.Order = chapterImage.Order;
                     }
                 }
-                var outImage = _dbContext.ChapterImagesDb.Where(e => e.Order >= chapterData.ChapterImagesList.Count);
-                _dbContext.ChapterImagesDb.RemoveRange(outImage);
+                var outImage = _dbContext.ChapterImagesDb.Where(e => !chapterData.ChapterImagesList.Select(f => f.ImagePath).Contains(e.ImagePath));
                 foreach (var image in outImage)
                 {
                     var splitFilePath = image.ImagePath.Split('/');
@@ -80,6 +67,7 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
                         Console.WriteLine("An error occurred while deleting the file: " + e.Message);
                     }
                 }
+                _dbContext.ChapterImagesDb.RemoveRange(outImage);
                 _dbContext.SaveChanges();
                 return chapterData;
             }
@@ -94,10 +82,22 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
                 _dbContext.ChaptersDb.Remove(result.Chapter);
                 result.ChapterImagesList = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == id).ToList();
                 _dbContext.ChapterImagesDb.RemoveRange(result.ChapterImagesList);
+                _dbContext.ChapterLikesDb.RemoveRange(_dbContext.ChapterLikesDb.Where(e => e.ChapterId == id));
                 _dbContext.SaveChanges();
                 return result;
             }
             return null;
+        }
+        public void DeleteChapterOfStory(string storyId)
+        {
+            var chapters = _dbContext.ChaptersDb.Where(e => e.StoryId == storyId);
+            var chapterIds = chapters.Select(f => f.Id);
+            var images = _dbContext.ChapterImagesDb.Where(e => chapterIds.Contains(e.ChapterId));
+            var likes = _dbContext.ChapterLikesDb.Where(e => chapterIds.Contains(e.ChapterId));
+            _dbContext.ChaptersDb.RemoveRange(chapters);
+            _dbContext.ChapterImagesDb.RemoveRange(images);
+            _dbContext.ChapterLikesDb.RemoveRange(likes);
+            _dbContext.SaveChanges();
         }
         public ChapterData GetChapter(string id)
         {

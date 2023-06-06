@@ -10,9 +10,10 @@ namespace BEComicWeb.Interface.StoryInterface
         public List<StoryData> SearchStory(string search_string, int page, int n_stories = 30);
         public int GetSearchStoryListSize(string? search_string);
         public StoryData? GetStory(string? id);
-        public StoryData AddStory(StoryData? story);
-        public StoryData UpdateStory(StoryData? story);
-        Stories DeleteStory(string? id);
+        public StoryData? GetStoryData(Stories story);
+        public StoryData AddStory(BaseStoryData? story);
+        public StoryData UpdateStory(string id, BaseStoryData? story);
+        public Stories DeleteStory(string? id);
         public bool CheckStoryExists(string? id);
         public List<Chapters> GetAllChaptersOfStory(string story_id);
         public List<StoryData> GetFollowStories(string userName, int page, int n_story);
