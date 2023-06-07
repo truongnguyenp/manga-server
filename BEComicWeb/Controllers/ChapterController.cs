@@ -58,14 +58,12 @@ namespace BEComicWeb.Controllers
         {
             try
             {
-
-                _IChapterRepository.UpdateChapter(chapterData);
+                return await Task.FromResult(_IChapterRepository.UpdateChapter(chapterData));
             }
             catch (DbUpdateConcurrencyException)
             {
                 throw;
             }
-            return await Task.FromResult(chapterData);
         }
 
         // Delete Chapter

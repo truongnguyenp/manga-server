@@ -36,23 +36,30 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             {
                 return null;
             }
-            var chapter = _dbContext.ChaptersDb.FirstOrDefault(e => e.StoryId == chapterData.Chapter.StoryId && e.ChapterNumber == chapterData.Chapter.ChapterNumber);
+            var chapter = _dbContext.ChaptersDb.FirstOrDefault(e => e.Id == chapterData.Chapter.Id);
             if (chapter != null)
             {
-                chapter = chapterData.Chapter;
+                chapter.Name = chapterData.Chapter.Name;
+                chapter.ChapterNumber = chapterData.Chapter.ChapterNumber;
+                chapter.Cost = chapterData.Chapter.Cost;
+                chapter.Image = chapter.Image;
+                chapter.LastModified = DateTime.Now;
+                _dbContext.ChaptersDb.Update(chapter);
                 foreach (var chapterImage in chapterData.ChapterImagesList)
                 {
-                    var image = _dbContext.ChapterImagesDb.FirstOrDefault(e => e.Id == chapterImage.Id);
-                    if (image == null)
+                    var image = _dbContext.ChapterImagesDb.FirstOrDefault(e => e.ImagePath == chapterImage.ImagePath);
+                    if (image == null && _dbContext.ChapterImagesDb.FirstOrDefault(e => e.Order == chapterImage.Order) == null)
                     {
                         _dbContext.ChapterImagesDb.Add(chapterImage);
                     }
                     else
                     {
                         image.Order = chapterImage.Order;
+                        image.ImagePath = chapterImage.ImagePath;
+                        _dbContext.ChapterImagesDb.Update(image);
                     }
                 }
-                var outImage = _dbContext.ChapterImagesDb.Where(e => !chapterData.ChapterImagesList.Select(f => f.ImagePath).Contains(e.ImagePath));
+                var outImage = _dbContext.ChapterImagesDb.Where(e => e.Order >= chapterData.ChapterImagesList.Count());
                 foreach (var image in outImage)
                 {
                     var splitFilePath = image.ImagePath.Split('/');
@@ -107,7 +114,7 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
             {
                 result.Chapter.Views++;
                 result.Likes = _dbContext.ChapterLikesDb.Where(e => e.ChapterId == id).Count();
-                result.ChapterImagesList = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == id).ToList();
+                result.ChapterImagesList = _dbContext.ChapterImagesDb.Where(e => e.ChapterId == id).OrderBy(e => e.Order).ToList();
                 _dbContext.SaveChanges();
                 return result;
             }
