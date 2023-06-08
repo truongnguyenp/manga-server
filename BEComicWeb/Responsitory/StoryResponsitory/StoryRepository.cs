@@ -3,8 +3,6 @@ using BEComicWeb.Interface.StoryInterface;
 using BEComicWeb.Model.ChapterModel;
 using BEComicWeb.Model.StoryModel;
 using BEComicWeb.Responsitory.StoryResponsitory;
-using System.Linq;
-using Vultr.API.Models;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace BEComicWeb.Repository.StoryRepository
@@ -65,7 +63,7 @@ namespace BEComicWeb.Repository.StoryRepository
 
         public bool CheckStoryExists(string? id)
         {
-           return _dbContext.StoriesDb.FirstOrDefault(e => e.Id == id) != null;
+            return _dbContext.StoriesDb.FirstOrDefault(e => e.Id == id) != null;
         }
 
         public Stories? DeleteStory(string? storyId)
@@ -78,7 +76,7 @@ namespace BEComicWeb.Repository.StoryRepository
                 //_dbContext.ChaptersDb.RemoveRange(_dbContext.ChaptersDb.Where(e => e.StoryId == storyId).ToList());
                 //_dbContext.StoryAuthorsDb.RemoveRange(_dbContext.StoryAuthorsDb.Where(e => e.StoryId == storyId).ToList());
                 //_dbContext.StoryCategoriesDb.RemoveRange(_dbContext.StoryCategoriesDb.Where(e => e.StoryId == storyId).ToList());
-                
+
                 _dbContext.StoryCategoriesDb.Remove(category);
                 _dbContext.StoryAuthorsDb.Remove(author);
                 _dbContext.StoryFollowsDb.RemoveRange(_dbContext.StoryFollowsDb.Where(e => e.StoryId == storyId));
@@ -97,8 +95,9 @@ namespace BEComicWeb.Repository.StoryRepository
         public StoryData? GetStory(string? id)
         {
             var story = _dbContext.StoriesDb.FirstOrDefault(e => e.Id == id);
+            if (story == null) return null;
             story.Views++;
-            
+
             StoryData? storyData = new StoryData()
             {
                 Story = story,
@@ -171,7 +170,7 @@ namespace BEComicWeb.Repository.StoryRepository
             story.Status = storyData.Status;
             story.Name = storyData.Name;
             story.Description = storyData.Description;
-            story.Image = storyData.Image; 
+            story.Image = storyData.Image;
             _dbContext.StoriesDb.Update(story);
             var author = _dbContext.StoryAuthorsDb.FirstOrDefault(e => e.StoryId == story.Id);
             StoryCategories storyCategory = new StoryCategories()

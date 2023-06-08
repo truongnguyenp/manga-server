@@ -42,7 +42,7 @@ namespace BEComicWeb.Responsitory.StoryResponsitory
                 chapter.Name = chapterData.Chapter.Name;
                 chapter.ChapterNumber = chapterData.Chapter.ChapterNumber;
                 chapter.Cost = chapterData.Chapter.Cost;
-                chapter.Image = chapter.Image;
+                chapter.Image = chapterData.Chapter.Image;
                 chapter.LastModified = DateTime.Now;
                 _dbContext.ChaptersDb.Update(chapter);
                 foreach (var chapterImage in chapterData.ChapterImagesList)
